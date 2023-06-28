@@ -15,6 +15,7 @@
 		87F8128C2A4C278D0067145D /* CoinProject.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 87F8128A2A4C278D0067145D /* CoinProject.xcdatamodeld */; };
 		87F8128E2A4C27900067145D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87F8128D2A4C27900067145D /* Assets.xcassets */; };
 		87F812912A4C27900067145D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 87F8128F2A4C27900067145D /* LaunchScreen.storyboard */; };
+		87F8129B2A4C2EE70067145D /* ApiKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F8129A2A4C2EE70067145D /* ApiKeys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		87F8128D2A4C27900067145D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		87F812902A4C27900067145D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		87F812922A4C27900067145D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		87F8129A2A4C2EE70067145D /* ApiKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKeys.swift; sourceTree = "<group>"; };
 		A43DD3DE36FBB2841AA36C88 /* Pods_CoinProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoinProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A6691D04FEDCE19E98F61B /* Pods-CoinProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoinProject.release.xcconfig"; path = "Target Support Files/Pods-CoinProject/Pods-CoinProject.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,6 +84,7 @@
 				87F8128F2A4C27900067145D /* LaunchScreen.storyboard */,
 				87F812922A4C27900067145D /* Info.plist */,
 				87F8128A2A4C278D0067145D /* CoinProject.xcdatamodeld */,
+				87F8129A2A4C2EE70067145D /* ApiKeys.swift */,
 			);
 			path = CoinProject;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				87F812862A4C278D0067145D /* ViewController.swift in Sources */,
 				87F812822A4C278D0067145D /* AppDelegate.swift in Sources */,
 				87F812842A4C278D0067145D /* SceneDelegate.swift in Sources */,
+				87F8129B2A4C2EE70067145D /* ApiKeys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
