@@ -3,6 +3,7 @@ PODS:
     - Charts/Core (= 4.1.0)
   - Charts/Core (4.1.0):
     - SwiftAlgorithms (~> 1.0)
+  - iCarousel (1.8.3)
   - IQKeyboardManagerSwift (6.5.11)
   - JGProgressHUD (2.2)
   - Kingfisher (7.6.2)
@@ -13,6 +14,7 @@ PODS:
 
 DEPENDENCIES:
   - Charts
+  - iCarousel
   - IQKeyboardManagerSwift
   - JGProgressHUD
   - Kingfisher (~> 7.0)
@@ -23,6 +25,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Charts
+    - iCarousel
     - IQKeyboardManagerSwift
     - JGProgressHUD
     - Kingfisher
@@ -33,6 +36,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
+  iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
   IQKeyboardManagerSwift: c7955c0bdbf7b2eb29bb7daaa44e3d90f55a9a85
   JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
@@ -41,6 +45,6 @@ SPEC CHECKSUMS:
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: 58c8c310fe12da5b2bfef90232ea0ab3463897e5
+PODFILE CHECKSUM: 09803669549bf5e79fd1c8e40fa49ec5bca1b53e
 
 COCOAPODS: 1.12.0

@@ -13,4 +13,5 @@ pod 'MJRefresh'
 pod 'Charts'
 pod 'TinyConstraints'
 pod 'JGProgressHUD'
+pod 'iCarousel'
 end
