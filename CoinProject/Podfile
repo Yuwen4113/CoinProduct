@@ -1,0 +1,18 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'CoinProject' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for CoinProject
+pod 'lottie-ios'
+pod 'Kingfisher', '~> 7.0'
+pod 'IQKeyboardManagerSwift'
+pod 'MJRefresh'
+pod 'Charts'
+pod 'TinyConstraints'
+pod 'JGProgressHUD'
+pod 'iCarousel'
+pod 'Starscream'
+end
