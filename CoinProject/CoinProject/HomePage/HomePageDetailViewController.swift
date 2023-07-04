@@ -25,6 +25,11 @@ class HomePageDetailViewController: UIViewController {
     var threeMonthCandleTimeArray: [TimeInterval] = []
     var oneYearCandleTimeArray: [TimeInterval] = []
     var allCandleTimeArray: [TimeInterval] = []
+    
+    var realTimeByPriceLabel: UILabel?
+    var currencySellPriceLabel: UILabel?
+    
+    
     @IBOutlet weak var coinNameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
@@ -51,7 +56,9 @@ class HomePageDetailViewController: UIViewController {
         fetchProductOrders(productID: currencyPair?.id ?? "") { [weak self] orders in
             self?.orders = orders
             DispatchQueue.main.async {
-                self?.tableView.reloadData()
+//                self?.tableView.reloadData()
+                let indexPath = IndexPath(row: 1, section: 0)
+                self?.tableView.reloadRows(at: [indexPath], with: .none)
             }
         }
         
@@ -59,7 +66,8 @@ class HomePageDetailViewController: UIViewController {
             self.currencySellBid = (Double(array[0]) ?? 0)
             self.currencySellPrice = (Double(array[1]) ?? 0)
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.realTimeByPriceLabel?.text = String(self.currencySellBid)
+                self.currencySellPriceLabel?.text = String(self.currencySellPrice)
             }
         }
         WebsocketService.shared.connect(string: "\(currencyPair?.baseCurrency ?? "")-USD" )
@@ -98,13 +106,16 @@ class HomePageDetailViewController: UIViewController {
         fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .day, value: -300, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
             self?.oneYearCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
             self?.oneYearCandleTimeArray = candles.map { $0[0] }.reversed()
-            
+
             let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: Date())!
             fetchData(self?.currencyPair?.id ?? "", "86400", "\(Int(oneYearAgo.timeIntervalSince1970))", "\(Int(calendar.date(byAdding: .day, value: -300, to: Date())!.timeIntervalSince1970))") { [weak self] candles in
                 self?.oneYearCandleCalcArray.append(contentsOf: candles.map { ($0[1] + $0[2]) / 2 }.reversed())
                 self?.oneYearCandleTimeArray.append(contentsOf: candles.map { $0[0] }.reversed())
             }
         }
+
+        let queue = DispatchQueue(label: "apiQueue", qos: .userInteractive, attributes: .concurrent)
+        let interval: TimeInterval = 0.1
 
         group.enter()
         var date = Date()
@@ -116,14 +127,16 @@ class HomePageDetailViewController: UIViewController {
         repeat {
             let threeHundredDaysAgo = calendar.date(byAdding: .day, value: -300, to: date)!
 
-            fetchData(currencyPair?.id ?? "", "86400", "\(Int(threeHundredDaysAgo.timeIntervalSince1970))", "\(Int(date.timeIntervalSince1970))") { candles in
-                candlesTemp = candles
-                array += candlesTemp
-                date = threeHundredDaysAgo
-                index += 1
-                semaphore.signal()
+            queue.asyncAfter(deadline: .now() + interval * Double(index)) {
+                fetchData(self.currencyPair?.id ?? "", "86400", "\(Int(threeHundredDaysAgo.timeIntervalSince1970))", "\(Int(date.timeIntervalSince1970))") { candles in
+                    candlesTemp = candles
+                    array += candlesTemp
+                    date = threeHundredDaysAgo
+                    index += 1
+                    semaphore.signal()
+                }
             }
-            
+
             semaphore.wait()
 
         } while(candlesTemp.count != 0)
@@ -174,7 +187,8 @@ extension HomePageDetailViewController: UITableViewDelegate, UITableViewDataSour
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ChartViewTableViewCell", for: indexPath) as! ChartViewTableViewCell
-            cell.realTimeByPriceLabel.text = String(currencySellBid)
+            self.realTimeByPriceLabel = cell.realTimeByPriceLabel
+            self.currencySellPriceLabel = cell.realTimeSellPriceLabel
             cell.realTimeSellPriceLabel.text = String(currencySellPrice)
             cell.dayArray = oneDayCandleCalcArray
             cell.oneWeekArray = oneWeekCandleCalcArray
@@ -188,6 +202,7 @@ extension HomePageDetailViewController: UITableViewDelegate, UITableViewDataSour
             cell.threeMonthCandleTimeArray = threeMonthCandleTimeArray
             cell.oneYearCandleTimeArray = oneYearCandleTimeArray
             cell.allCandleTimeArray = allCandleTimeArray
+            cell.setChartView(dataArray: allCandleCalcArray)
             return cell
         case 1...orders.count:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecordTableViewCell", for: indexPath) as! RecordTableViewCell

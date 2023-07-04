@@ -61,21 +61,21 @@ class ImageMarkerView: MarkerView {
 
 class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     var data: LineChartData!
-    var minXIndex: Double!
-    var maxXIndex: Double!
+    var minXIndex: Double = 0
+    var maxXIndex: Double = 0
     var dataSet: LineChartDataSet!
-    var allArray: [Double] = [0]
-    var dayArray: [Double] = [0]
-    var oneWeekArray: [Double] = [0]
-    var oneMonthArray: [Double] = [0]
-    var threeMonthArray: [Double] = [0]
-    var oneYearArray: [Double] = [0]
-    var oneDayCandleTimeArray: [TimeInterval] = [0]
-    var oneWeekCandleTimeArray: [TimeInterval] = [0]
-    var oneMonthCandleTimeArray: [TimeInterval] = [0]
-    var threeMonthCandleTimeArray: [TimeInterval] = [0]
-    var oneYearCandleTimeArray: [TimeInterval] = [0]
-    var allCandleTimeArray: [TimeInterval] = [0]
+    var allArray: [Double] = []
+    var dayArray: [Double] = []
+    var oneWeekArray: [Double] = []
+    var oneMonthArray: [Double] = []
+    var threeMonthArray: [Double] = []
+    var oneYearArray: [Double] = []
+    var oneDayCandleTimeArray: [TimeInterval] = []
+    var oneWeekCandleTimeArray: [TimeInterval] = []
+    var oneMonthCandleTimeArray: [TimeInterval] = []
+    var threeMonthCandleTimeArray: [TimeInterval] = []
+    var oneYearCandleTimeArray: [TimeInterval] = []
+    var allCandleTimeArray: [TimeInterval] = []
     var dataEntries: [ChartDataEntry] = []
     @IBOutlet weak var historyAverageView: UIView!
     @IBOutlet weak var historyAverageLabel: UILabel!
@@ -97,7 +97,6 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     @IBOutlet weak var historyTimeLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        setChartView(dataArray: allArray)
         historyAverageView.isHidden = true
         setButton(exceptButton: allButton, exceptView: allView)
         lineChartView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 20)
@@ -108,12 +107,12 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         lineChartView.xAxis.valueFormatter = nil
         lineChartView.marker = nil
         lineChartView.notifyDataSetChanged()
-       
-        minXIndex = timeArray[dataArray.firstIndex(of: dataArray.min() ?? 0) ?? 0]
-        maxXIndex = timeArray[dataArray.firstIndex(of: dataArray.max() ?? 0) ?? 0]
-//        minXIndex = Double(dataArray.firstIndex(of: dataArray.min() ?? 0) ?? 0) + 1
-//        maxXIndex = Double(dataArray.firstIndex(of: dataArray.max() ?? 0) ?? 0) + 1
-        
+        if dataArray.isEmpty == false {
+            //打開 暫無資料View
+            minXIndex = timeArray[dataArray.firstIndex(of: dataArray.min() ?? 0) ?? 0]
+            maxXIndex = timeArray[dataArray.firstIndex(of: dataArray.max() ?? 0) ?? 0]
+        }
+
         dataEntries = []
         dataSet = nil
         for i in 0..<dataArray.count {
@@ -256,7 +255,8 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         let timestamp: TimeInterval = entry.x
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 8 * 60 * 60) // 設定時區為 +8
+
         let date = Date(timeIntervalSince1970: timestamp)
         let dateString = dateFormatter.string(from: date)
         
