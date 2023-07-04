@@ -14,6 +14,11 @@ class ImageTableViewCell: UITableViewCell {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var PriceLabel: UILabel!
     @IBOutlet weak var carousel: iCarousel!
+    var price: String = "" {
+        didSet {
+            PriceLabel.text = "NT$\(price)"
+        }
+    }
     var photos: [String] = []
     var timer: Timer?
     var correntCellIndex = 0
@@ -43,7 +48,7 @@ class ImageTableViewCell: UITableViewCell {
             eyeButton.setImage(UIImage(named: "eye-close"), for: .normal)
         } else {
             eyeButton.isSelected = true
-            PriceLabel.text = "NT$35,878"
+            PriceLabel.text = "NT$\(price)"
             eyeButton.setImage(UIImage(named: "eye-open"), for: .normal)
         }
     }
