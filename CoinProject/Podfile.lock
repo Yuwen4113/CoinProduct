@@ -9,6 +9,7 @@ PODS:
   - Kingfisher (7.6.2)
   - lottie-ios (4.2.0)
   - MJRefresh (3.7.5)
+  - Starscream (4.0.4)
   - SwiftAlgorithms (1.0.0)
   - TinyConstraints (4.0.2)
 
@@ -20,6 +21,7 @@ DEPENDENCIES:
   - Kingfisher (~> 7.0)
   - lottie-ios
   - MJRefresh
+  - Starscream
   - TinyConstraints
 
 SPEC REPOS:
@@ -31,6 +33,7 @@ SPEC REPOS:
     - Kingfisher
     - lottie-ios
     - MJRefresh
+    - Starscream
     - SwiftAlgorithms
     - TinyConstraints
 
@@ -42,9 +45,10 @@ SPEC CHECKSUMS:
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
   lottie-ios: 809ecf2d460ed650a6aed7aa88b2ec45fab4779c
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: 09803669549bf5e79fd1c8e40fa49ec5bca1b53e
+PODFILE CHECKSUM: d5c7634ce594c883d3f96c63340e57765d2513e7
 
 COCOAPODS: 1.12.0

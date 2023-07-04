@@ -8,7 +8,7 @@
 import UIKit
 import Charts
 class CoinTableViewCell: UITableViewCell, ChartViewDelegate {
-    
+    var isUpRate: Bool = false
     @IBOutlet weak var selectValuesLabel: UILabel!
     @IBOutlet weak var coinNameLabel: UILabel!
     @IBOutlet weak var coinIconImageView: UIImageView!
@@ -19,7 +19,7 @@ class CoinTableViewCell: UITableViewCell, ChartViewDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectValuesLabel.text = ""
-        setChartView()
+        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -62,7 +62,12 @@ class CoinTableViewCell: UITableViewCell, ChartViewDelegate {
         dataSet.drawCirclesEnabled = false
         dataSet.drawValuesEnabled = false
         dataSet.lineWidth = 1.3
-        dataSet.colors = [UIColor.systemGreen]
+        if isUpRate == true {
+            dataSet.colors = [UIColor.systemGreen]
+            
+        } else {
+            dataSet.colors = [UIColor.red]
+        }
         
         let data = LineChartData(dataSet: dataSet)
         lineChartView.data = data
