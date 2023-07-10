@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import MJRefresh
 
-class HomePageDetailViewController: UIViewController {
+class HomePageDetailViewController: UIViewController, UIViewControllerTransitioningDelegate {
+    var isSell: Bool = true
     var currencyPair: TradingPair?
     var currencyChineseName: String = ""
     var orders: [Order] = []
@@ -29,12 +31,12 @@ class HomePageDetailViewController: UIViewController {
     var realTimeByPriceLabel: UILabel?
     var currencySellPriceLabel: UILabel?
     
-    
     @IBOutlet weak var coinNameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if currencyPair?.baseCurrency == "BCH" {
             coinNameLabel.text = "比特幣現金(\(currencyPair?.baseCurrency ?? ""))"
         }
@@ -47,14 +49,18 @@ class HomePageDetailViewController: UIViewController {
         if currencyPair?.baseCurrency == "LINK" {
             coinNameLabel.text = "LINK幣(\(currencyPair?.baseCurrency ?? ""))"
         }
+        let header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(headerRefresh))
+        tableView.mj_header = header
         self.tableView.dataSource = self
         self.tableView.delegate = self
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
+        tabBarController?.tabBar.isHidden = true
         fetchProductOrders(productID: currencyPair?.id ?? "") { [weak self] orders in
             self?.orders = orders
+            print(self?.orders)
             DispatchQueue.main.async {
 //                self?.tableView.reloadData()
                 let indexPath = IndexPath(row: 1, section: 0)
@@ -63,8 +69,8 @@ class HomePageDetailViewController: UIViewController {
         }
         
         WebsocketService.shared.realTimeData = { array in
-            self.currencySellBid = (Double(array[0]) ?? 0)
-            self.currencySellPrice = (Double(array[1]) ?? 0)
+            self.currencySellBid = (Double(array[1]) ?? 0)
+            self.currencySellPrice = (Double(array[0]) ?? 0)
             DispatchQueue.main.async {
                 self.realTimeByPriceLabel?.text = String(self.currencySellBid)
                 self.currencySellPriceLabel?.text = String(self.currencySellPrice)
@@ -104,13 +110,16 @@ class HomePageDetailViewController: UIViewController {
         }
 
         fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .day, value: -300, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
-            self?.oneYearCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
-            self?.oneYearCandleTimeArray = candles.map { $0[0] }.reversed()
+            self?.oneYearCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }
+            self?.oneYearCandleTimeArray = candles.map { $0[0] }
 
             let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: Date())!
-            fetchData(self?.currencyPair?.id ?? "", "86400", "\(Int(oneYearAgo.timeIntervalSince1970))", "\(Int(calendar.date(byAdding: .day, value: -300, to: Date())!.timeIntervalSince1970))") { [weak self] candles in
-                self?.oneYearCandleCalcArray.append(contentsOf: candles.map { ($0[1] + $0[2]) / 2 }.reversed())
-                self?.oneYearCandleTimeArray.append(contentsOf: candles.map { $0[0] }.reversed())
+            fetchData(self?.currencyPair?.id ?? "", "86400", "\(Int(oneYearAgo.timeIntervalSince1970))", "\(Int(calendar.date(byAdding: .day, value: -301, to: Date())!.timeIntervalSince1970))") { [weak self] candles in
+                self?.oneYearCandleCalcArray.append(contentsOf: candles.map { ($0[1] + $0[2]) / 2 })
+                self?.oneYearCandleTimeArray.append(contentsOf: candles.map { $0[0] })
+                
+                self?.oneYearCandleCalcArray.reverse()
+                self?.oneYearCandleTimeArray.reverse()
             }
         }
 
@@ -151,10 +160,52 @@ class HomePageDetailViewController: UIViewController {
 
         
     }
+    
+    @objc func headerRefresh() {
+            self.tableView!.reloadData()
+            self.tableView.mj_header?.endRefreshing()
+    }
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
         WebsocketService.shared.disconnect()
     }
+    
+    @IBAction func didBuyButtonTapped(_ sender: Any) {
+        isSell = false
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let targetViewController = storyboard.instantiateViewController(withIdentifier: "BuyViewController") as? BuyViewController {
+            targetViewController.currencyPair = self.currencyPair
+            targetViewController.isSell = self.isSell
+            
+            let nv = UINavigationController(rootViewController: targetViewController)
+            
+            nv.modalPresentationStyle = .custom
+            nv.transitioningDelegate = self
+            nv.navigationBar.isHidden = true
+            
+            present(nv, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func didSellButtonTapped(_ sender: Any) {
+        isSell = true
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let targetViewController = storyboard.instantiateViewController(withIdentifier: "BuyViewController") as? BuyViewController {
+            targetViewController.currencyPair = self.currencyPair
+            targetViewController.isSell = self.isSell
+            
+            let nv = UINavigationController(rootViewController: targetViewController)
+            
+            nv.modalPresentationStyle = .custom
+            nv.transitioningDelegate = self
+            nv.navigationBar.isHidden = true
+            
+            present(nv, animated: true, completion: nil)
+        }
+
+    }
+    
     @IBAction func didBackButtonTapped(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -162,6 +213,7 @@ class HomePageDetailViewController: UIViewController {
     func fetchProductOrders(productID: String, status: String = "done", limit: Int = 5, completion: @escaping ([Order]) -> Void) {
         CoinbaseService.shared.getApiResponse(api: .allOrders(limit: limit, status: status, productID: productID),
                                               authRequired: true, requestPath: "/orders?limit=5&status=done&product_id=\(productID)", httpMethod: .GET) { (orders: [Order]) in
+            
             completion(orders)
         }
     }
@@ -206,20 +258,29 @@ extension HomePageDetailViewController: UITableViewDelegate, UITableViewDataSour
             return cell
         case 1...orders.count:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecordTableViewCell", for: indexPath) as! RecordTableViewCell
-            cell.buyCoinTypeLabel.text = "購入 \(currencyPair!.baseCurrency)"
+    
+            if orders[indexPath.row - 1].side == "buy" {
+                cell.buyCoinTypeLabel.text = "購入 \(currencyPair!.baseCurrency)"
+                cell.buyShowLabel.text = "BUY"
+                cell.buyView.backgroundColor = cell.orderStatusView.backgroundColor
+            } else {
+                cell.buyCoinTypeLabel.text = "賣出 \(currencyPair!.baseCurrency)"
+                cell.buyShowLabel.text = "SELL"
+                cell.buyView.backgroundColor = .orange
+            }
             
             if orders[indexPath.row - 1].status == "done" {
                 cell.orderStatusLabel.text = "成功"
             } else {
                 cell.orderStatusLabel.text = "失敗"
             }
-            
-            cell.buyCoinPriceLabel.text = "USD$" + String(format: "%.2f", Double(orders[indexPath.row - 1].price) ?? 0)
-            let dateString = orders[indexPath.row - 1].doneAt
-            
+            cell.buyCoinPriceLabel.text = "USD$ " + String(format: "%.2f", Double(orders[indexPath.row - 1].executedValue ?? "0") ?? 0)
+            let dateString = orders[indexPath.row - 1].doneAt!
+
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
-            
+            dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
+
             if let date = dateFormatter.date(from: dateString) {
                 let taiwanTimeZone = TimeZone(abbreviation: "GMT+8")
                 dateFormatter.timeZone = taiwanTimeZone

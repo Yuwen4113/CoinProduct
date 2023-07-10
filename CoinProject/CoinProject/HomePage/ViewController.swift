@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MJRefresh
 
 class ViewController: UIViewController {
     var USDPairs: [TradingPair] = []
@@ -14,29 +15,40 @@ class ViewController: UIViewController {
     var usdTradingPairs: [(String, String)] = []
     var accountTotalBalance: Double = 0
     var usdRate: Double = 0
+//    var accounts: [Account] = []
     
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        
+        let header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(headerRefresh))
+        tableView.mj_header = header
         tableView.contentInsetAdjustmentBehavior = .never
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.accountTotalBalance = 0
         callCurrencyApi {
             self.fetchCurrencyRate {[weak self] rate in
                 self?.usdRate = rate
                 self?.getUSDPairsProductFluctRateAvgPrice {
-                self?.getAccountsTotalBalance() {
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData()
+                    self?.getAccountsTotalBalance() {
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
                     }
                 }
             }
         }
-        }
     }
+    
+    @objc func headerRefresh() {
+            self.tableView!.reloadData()
+            self.tableView.mj_header?.endRefreshing()
+        }
+    
     func callCurrencyApi(completion: (() -> Void)? = nil) {
         CoinbaseService.shared.getApiResponse(api: CoinbaseApi.allTradingPairs,
                                               authRequired: false) { [weak self] (products: [TradingPair]) in
@@ -88,11 +100,33 @@ class ViewController: UIViewController {
     
     func getAccountsTotalBalance(completion: @escaping () -> Void) {
         CoinbaseService.shared.fetchAccounts { [weak self] accounts in
-            self?.accountTotalBalance = Double(accounts.first { $0.currency == "USD" }?.balance ?? "") ?? 0
-            completion()
+//            self?.accounts = accounts
+//            for account in accounts {
+//                self?.accountTotalBalance += Double(account.balance) ?? 0
+//                
+//            }
+            
+            var totalBalance = 0.0
+            
+            let group = DispatchGroup()
+            
+            accounts.forEach { account in
+                group.enter()
+                
+                CoinbaseService.shared.fetchCurrencyRate(currency: account.currency) { rate in
+                    totalBalance += (Double(account.balance) ?? 0.0) * rate
+                    group.leave()
+                }
+            }
+            
+//            self?.accountTotalBalance = Double(accounts.first { $0.currency == "USD" }?.balance ?? "") ?? 0
+          
+            group.notify(queue: .main) {
+                self?.accountTotalBalance = totalBalance
+                completion()
+            }
         }
     }
-    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -104,13 +138,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ImageTableViewCell", for: indexPath) as! ImageTableViewCell
-            //            cell.PriceLabel.text = String(describing: self.accountTotalBalance)
-            cell.price = String(format: "%.2f",self.accountTotalBalance * usdRate)
+            cell.price = String(format: "%.2f",self.accountTotalBalance)
             return cell
         case 1...USDPairs.count:
             let USDPair = USDPairs[indexPath.row - 1]
             let coinRate = fluctuateRateAvgPrice[USDPair.id]
-            
             let cell = tableView.dequeueReusableCell(withIdentifier: "CoinTableViewCell", for: indexPath) as! CoinTableViewCell
             if coinRate!.0 >= 0 {
                 cell.isUpRate = true
@@ -119,7 +151,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.isUpRate = false
                 cell.coinIncreaseLabel.textColor = .red
             }
-            
+            cell.lineChartView.isUserInteractionEnabled = false
             cell.setChartView()
             cell.coinRateLabel.text = String(format: "%.2f", coinRate!.1 * usdRate)
             cell.coinIncreaseLabel.text = String(format: "%.2f", coinRate!.0) + "%"
@@ -172,4 +204,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.pushViewController(nextViewController, animated: true)
         }
     }
+
+
 }
