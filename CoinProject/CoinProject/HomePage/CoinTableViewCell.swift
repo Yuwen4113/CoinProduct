@@ -34,6 +34,10 @@ class CoinTableViewCell: UITableViewCell, ChartViewDelegate {
         lineChartView.xAxis.enabled = false
         lineChartView.leftAxis.enabled = false
         lineChartView.rightAxis.enabled = false
+        lineChartView.scaleXEnabled = false
+        lineChartView.scaleYEnabled = false
+        lineChartView.doubleTapToZoomEnabled = false
+        
         
         // 設定折線圖的數據
         var values:[Double] = []
@@ -58,6 +62,8 @@ class CoinTableViewCell: UITableViewCell, ChartViewDelegate {
         }
         
         let dataSet = LineChartDataSet(entries: dataEntries)
+        dataSet.drawHorizontalHighlightIndicatorEnabled = false
+        dataSet.drawVerticalHighlightIndicatorEnabled = false
         dataSet.mode = .cubicBezier
         dataSet.drawCirclesEnabled = false
         dataSet.drawValuesEnabled = false
@@ -72,7 +78,7 @@ class CoinTableViewCell: UITableViewCell, ChartViewDelegate {
         let data = LineChartData(dataSet: dataSet)
         lineChartView.data = data
     }
-    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
-        selectValuesLabel.text = "\(entry.y)"
-    }
+//    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+//        selectValuesLabel.text = "\(entry.y)"
+//    }
 }

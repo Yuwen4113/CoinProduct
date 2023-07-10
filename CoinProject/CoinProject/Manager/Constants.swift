@@ -27,6 +27,10 @@ enum CoinbaseApi {
     case allOrders(limit: Int, status: String, productID: String)
     case allCandles(productID: String, granularity: String, start: String, end: String)
     case exchangeRate
+    case exchangeRateInCurrency(currency: String)
+    case createOrders
+    case getOneOrder(id: String)
+    
     
     private var baseURL: String {
         return "https://api-public.sandbox.pro.coinbase.com"
@@ -50,8 +54,15 @@ enum CoinbaseApi {
             return "\(baseURL)/orders?limit=\(limit)&status=\(status)&product_id=\(productID)"
         case .allCandles(productID: let productID, granularity: let granularity, start: let start, end: let end):
             return "\(baseURL)/products/\(productID)/candles?granularity=\(granularity)&start=\(start)&end=\(end)"
+//            return "https://api.exchange.coinbase.com/products/\(productID)/candles?granularity=\(granularity)&start=\(start)&end=\(end)"
         case .exchangeRate:
             return "https://api.coinbase.com/v2/exchange-rates?currency=USD"
+        case .exchangeRateInCurrency(currency: let currency):
+            return "https://api.coinbase.com/v2/exchange-rates?currency=\(currency)"
+        case .createOrders:
+            return "\(baseURL)/orders"
+        case .getOneOrder(id: let id):
+            return "\(baseURL)/orders/\(id)"
         }
     }
 }

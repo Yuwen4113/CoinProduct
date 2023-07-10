@@ -26,7 +26,8 @@ class WebsocketService {
     var string: String = ""
     
     func connect(string: String) {
-        var request = URLRequest(url: URL(string: "wss://ws-feed.exchange.coinbase.com")!)
+//        var request = URLRequest(url: URL(string: "wss://ws-feed.exchange.coinbase.com")!)
+        var request = URLRequest(url: URL(string: "wss://ws-feed-public.sandbox.exchange.coinbase.com")!)
         
         self.string = string
         
@@ -64,7 +65,7 @@ extension WebsocketService: WebSocketDelegate {
             """
             socket.write(string: subscriptionMessage)
 
-            print("websocket is connected: \(headers)")
+//            print("websocket is connected: \(headers)")
 
         case .disconnected(let reason, let code):
             // Unsubscribe from the ticker batch channel
@@ -79,18 +80,18 @@ extension WebsocketService: WebSocketDelegate {
             """
             socket.write(string: unsubscribeMessage)
 
-            print("WebSocket is disconnected: \(reason) with code: \(code)")
+//            print("WebSocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
             if let data = string.data(using: .utf8) {
                     do {
-                        print(string)
+//                        print(string)
                         let decoder = JSONDecoder()
                         let tickerMessage = try decoder.decode(TickerMessage.self, from: data)
                         let realTimeBid = tickerMessage.bestBid
                         let realTimeAsk = tickerMessage.bestAsk
                         self.realTimeData!([realTimeBid, realTimeAsk])
-                        print("Received price: \(tickerMessage)")
+//                        print("Received price: \(tickerMessage)")
                     } catch {
                         print("Failed to decode ticker message: \(error)")
                     }

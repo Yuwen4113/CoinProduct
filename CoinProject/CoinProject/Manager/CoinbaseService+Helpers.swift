@@ -36,7 +36,8 @@ extension CoinbaseService {
                                     httpMethod: HttpMethod = .GET,
                                     body: String = "",
                                     parameters: String? = nil,
-                                    completion: @escaping (T) -> Void) {
+                                    completion: @escaping (T) -> Void,
+                                    errorHandle: @escaping (() -> Void) = {}) {
         
         guard let url = URL(string: api.path) else {
             print("Invalid URL")
@@ -45,7 +46,8 @@ extension CoinbaseService {
         // print("URL: \(url)")
         var request = URLRequest(url: url, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+
         if authRequired {
             let timestampSignature = getTimestampSignature(requestPath: requestPath,
                                                            method: httpMethod.rawValue,
@@ -73,9 +75,17 @@ extension CoinbaseService {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(T.self, from: data)
                 // print("Response: \(response)")
+//                print("-------------")
+//                print(String(data: data, encoding: String.Encoding.utf8))
+//                print("-------------")
+
                 completion(response)
             } catch {
+                print("-------------")
+                print(String(data: data, encoding: String.Encoding.utf8))
                 print("Error decoding data: \(error)")
+                print("-------------")
+                errorHandle()
             }
         }
         

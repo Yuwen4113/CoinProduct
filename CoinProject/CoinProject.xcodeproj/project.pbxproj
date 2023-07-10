@@ -10,6 +10,17 @@
 		5DCCD1610EE1A2DD6C9DDDFF /* Pods_CoinProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43DD3DE36FBB2841AA36C88 /* Pods_CoinProject.framework */; };
 		8735EA222A4D7A23001F7F6B /* HomePageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8735EA212A4D7A23001F7F6B /* HomePageDetailViewController.swift */; };
 		876A4B322A51716800F0A4B2 /* ExchangeRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 876A4B312A51716800F0A4B2 /* ExchangeRate.swift */; };
+		879417C32A54406100930F99 /* BuyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417C22A54406100930F99 /* BuyViewController.swift */; };
+		879417C52A55391900930F99 /* OrderDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417C42A55391900930F99 /* OrderDetailViewController.swift */; };
+		879417C72A554BA900930F99 /* PostApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417C62A554BA900930F99 /* PostApi.swift */; };
+		879417CA2A5676D900930F99 /* WalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417C92A5676D900930F99 /* WalletsViewController.swift */; };
+		879417CC2A56770C00930F99 /* OrderHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417CB2A56770C00930F99 /* OrderHistoryViewController.swift */; };
+		879417CE2A5677F100930F99 /* CurrencySelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417CD2A5677F100930F99 /* CurrencySelectorViewController.swift */; };
+		879417D02A568DA000930F99 /* WalletTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417CF2A568DA000930F99 /* WalletTableViewCell.swift */; };
+		879417D22A568F3900930F99 /* OrderHistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417D12A568F3900930F99 /* OrderHistoryTableViewCell.swift */; };
+		879417D42A568F6F00930F99 /* CurrencyTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417D32A568F6F00930F99 /* CurrencyTypeTableViewCell.swift */; };
+		879417D72A57A62600930F99 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417D62A57A62600930F99 /* ProfileViewController.swift */; };
+		879417D92A5A9EEF00930F99 /* OrderInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879417D82A5A9EEF00930F99 /* OrderInfoViewController.swift */; };
 		879BF1212A4DC2D100F879CF /* ChartViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879BF1202A4DC2D100F879CF /* ChartViewTableViewCell.swift */; };
 		879BF1232A4DC2E500F879CF /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879BF1222A4DC2E500F879CF /* RecordTableViewCell.swift */; };
 		87DB28982A504EB5000E17A4 /* ProductStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DB28902A504EB4000E17A4 /* ProductStats.swift */; };
@@ -40,6 +51,17 @@
 		7AC025A67CB67E2934301046 /* Pods-CoinProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoinProject.debug.xcconfig"; path = "Target Support Files/Pods-CoinProject/Pods-CoinProject.debug.xcconfig"; sourceTree = "<group>"; };
 		8735EA212A4D7A23001F7F6B /* HomePageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageDetailViewController.swift; sourceTree = "<group>"; };
 		876A4B312A51716800F0A4B2 /* ExchangeRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRate.swift; sourceTree = "<group>"; };
+		879417C22A54406100930F99 /* BuyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyViewController.swift; sourceTree = "<group>"; };
+		879417C42A55391900930F99 /* OrderDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailViewController.swift; sourceTree = "<group>"; };
+		879417C62A554BA900930F99 /* PostApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostApi.swift; sourceTree = "<group>"; };
+		879417C92A5676D900930F99 /* WalletsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletsViewController.swift; sourceTree = "<group>"; };
+		879417CB2A56770C00930F99 /* OrderHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryViewController.swift; sourceTree = "<group>"; };
+		879417CD2A5677F100930F99 /* CurrencySelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorViewController.swift; sourceTree = "<group>"; };
+		879417CF2A568DA000930F99 /* WalletTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTableViewCell.swift; sourceTree = "<group>"; };
+		879417D12A568F3900930F99 /* OrderHistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryTableViewCell.swift; sourceTree = "<group>"; };
+		879417D32A568F6F00930F99 /* CurrencyTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTypeTableViewCell.swift; sourceTree = "<group>"; };
+		879417D62A57A62600930F99 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		879417D82A5A9EEF00930F99 /* OrderInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderInfoViewController.swift; sourceTree = "<group>"; };
 		879BF1202A4DC2D100F879CF /* ChartViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewTableViewCell.swift; sourceTree = "<group>"; };
 		879BF1222A4DC2E500F879CF /* RecordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
 		87DB28902A504EB4000E17A4 /* ProductStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductStats.swift; sourceTree = "<group>"; };
@@ -91,6 +113,28 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		879417C82A56768400930F99 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				879417C92A5676D900930F99 /* WalletsViewController.swift */,
+				879417CB2A56770C00930F99 /* OrderHistoryViewController.swift */,
+				879417CD2A5677F100930F99 /* CurrencySelectorViewController.swift */,
+				879417CF2A568DA000930F99 /* WalletTableViewCell.swift */,
+				879417D12A568F3900930F99 /* OrderHistoryTableViewCell.swift */,
+				879417D32A568F6F00930F99 /* CurrencyTypeTableViewCell.swift */,
+				879417D82A5A9EEF00930F99 /* OrderInfoViewController.swift */,
+			);
+			path = Wallet;
+			sourceTree = "<group>";
+		};
+		879417D52A57A5DE00930F99 /* profile */ = {
+			isa = PBXGroup;
+			children = (
+				879417D62A57A62600930F99 /* ProfileViewController.swift */,
+			);
+			path = profile;
+			sourceTree = "<group>";
+		};
 		87DB288F2A504E86000E17A4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +157,7 @@
 				87DB28A32A504F0D000E17A4 /* CoinbaseService+Helpers.swift */,
 				87DB28A12A504F0D000E17A4 /* Constants.swift */,
 				87DB28A42A504F0D000E17A4 /* WebsocketService.swift */,
+				879417C62A554BA900930F99 /* PostApi.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -138,6 +183,8 @@
 		87F812802A4C278D0067145D /* CoinProject */ = {
 			isa = PBXGroup;
 			children = (
+				879417D52A57A5DE00930F99 /* profile */,
+				879417C82A56768400930F99 /* Wallet */,
 				87DB28A02A504EEE000E17A4 /* Manager */,
 				87DB288F2A504E86000E17A4 /* Model */,
 				87F8129C2A4C391B0067145D /* HomePage */,
@@ -163,6 +210,8 @@
 				8735EA212A4D7A23001F7F6B /* HomePageDetailViewController.swift */,
 				879BF1202A4DC2D100F879CF /* ChartViewTableViewCell.swift */,
 				879BF1222A4DC2E500F879CF /* RecordTableViewCell.swift */,
+				879417C22A54406100930F99 /* BuyViewController.swift */,
+				879417C42A55391900930F99 /* OrderDetailViewController.swift */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -290,12 +339,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				879417CE2A5677F100930F99 /* CurrencySelectorViewController.swift in Sources */,
 				87DB289D2A504EB5000E17A4 /* Profile.swift in Sources */,
 				876A4B322A51716800F0A4B2 /* ExchangeRate.swift in Sources */,
+				879417D92A5A9EEF00930F99 /* OrderInfoViewController.swift in Sources */,
 				87F8128C2A4C278D0067145D /* CoinProject.xcdatamodeld in Sources */,
+				879417C52A55391900930F99 /* OrderDetailViewController.swift in Sources */,
 				87DB289A2A504EB5000E17A4 /* TickerMessage.swift in Sources */,
+				879417D72A57A62600930F99 /* ProfileViewController.swift in Sources */,
+				879417D22A568F3900930F99 /* OrderHistoryTableViewCell.swift in Sources */,
 				87DB28982A504EB5000E17A4 /* ProductStats.swift in Sources */,
+				879417CA2A5676D900930F99 /* WalletsViewController.swift in Sources */,
 				87F812862A4C278D0067145D /* ViewController.swift in Sources */,
+				879417D42A568F6F00930F99 /* CurrencyTypeTableViewCell.swift in Sources */,
 				87DB28A62A504F0D000E17A4 /* CoinbaseService.swift in Sources */,
 				87F812A42A4C416C0067145D /* ImageCollectionViewCell.swift in Sources */,
 				87DB289C2A504EB5000E17A4 /* Account.swift in Sources */,
@@ -304,14 +360,18 @@
 				87F8129E2A4C397B0067145D /* ImageTableViewCell.swift in Sources */,
 				87DB289F2A504EB5000E17A4 /* CurrencyPair.swift in Sources */,
 				879BF1212A4DC2D100F879CF /* ChartViewTableViewCell.swift in Sources */,
+				879417CC2A56770C00930F99 /* OrderHistoryViewController.swift in Sources */,
 				87DB289B2A504EB5000E17A4 /* Orders.swift in Sources */,
 				87DB28A72A504F0D000E17A4 /* CoinbaseService+Helpers.swift in Sources */,
 				87DB28A82A504F0D000E17A4 /* WebsocketService.swift in Sources */,
+				879417C32A54406100930F99 /* BuyViewController.swift in Sources */,
 				879BF1232A4DC2E500F879CF /* RecordTableViewCell.swift in Sources */,
 				87DB28A52A504F0D000E17A4 /* Constants.swift in Sources */,
+				879417D02A568DA000930F99 /* WalletTableViewCell.swift in Sources */,
 				87F812842A4C278D0067145D /* SceneDelegate.swift in Sources */,
 				8735EA222A4D7A23001F7F6B /* HomePageDetailViewController.swift in Sources */,
 				87F8129B2A4C2EE70067145D /* ApiKeys.swift in Sources */,
+				879417C72A554BA900930F99 /* PostApi.swift in Sources */,
 				87F812A22A4C400A0067145D /* CoinTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -62,18 +62,62 @@ extension CoinbaseService {
             completion(orders)
         }
     }
-    
-//    func fetchCurrencyRate(base: String, currency: String, completion: @escaping (Double) -> Void) {
-//        getApiResponse(api: .prices(currencyPair: "\(base)-\(currency)"), authRequired: false) { (priceInfo: Price) in
-//            let rate = Double(priceInfo.data.amount) ?? 0
-//            completion(rate)
-//        }
-//    }
-    func fetchCurrencyRate(completion: @escaping (Double) -> Void) {
-            getApiResponse(api: .exchangeRate, authRequired: false) { (allRates: ExchangeRates) in
-                let rate = Double(allRates.data.rates["TWD"] ?? "0") ?? 0
-                completion(rate)
+    func fetchAllOrders(
+        productID: String,
+        status: String = "done",
+        limit: Int = 100,
+        completion: @escaping ([Order]) -> Void,
+        errorHandle: @escaping (() -> Void) = {}) {
+            getApiResponse(api: .allOrders(limit: limit, status: status, productID: productID),
+                           authRequired: true, requestPath: "/orders?limit=100&status=done&product_id=\(productID)", httpMethod: .GET) { (orders: [Order]) in
+                completion(orders)
+            }errorHandle: {
+                errorHandle()
             }
         }
-
+    
+    
+    //    func fetchCurrencyRate(base: String, currency: String, completion: @escaping (Double) -> Void) {
+    //        getApiResponse(api: .prices(currencyPair: "\(base)-\(currency)"), authRequired: false) { (priceInfo: Price) in
+    //            let rate = Double(priceInfo.data.amount) ?? 0
+    //            completion(rate)
+    //        }
+    //    }
+    func fetchCurrencyRate(currency: String, completion: @escaping (Double) -> Void) {
+        getApiResponse(api: .exchangeRateInCurrency(currency: currency), authRequired: false) { (allRates: ExchangeRates) in
+            let rate = Double(allRates.data.rates["TWD"] ?? "0") ?? 0
+            completion(rate)
+        }
+    }
+    
+    func fetchCurrencyRate(completion: @escaping (Double) -> Void) {
+        getApiResponse(api: .exchangeRate, authRequired: false) { (allRates: ExchangeRates) in
+            let rate = Double(allRates.data.rates["TWD"] ?? "0") ?? 0
+            completion(rate)
+        }
+    }
+    
+    func createOrders(size: String, side: String, productId: String, completion: @escaping (String) -> Void) {
+//        let body = "{\"price\": \"\(price)\", \"size\": \"\(size)\", \"side\": \"\(side)\", \"product_id\": \"\(productId)\", \"time_in_force\": \"FOK\"}"
+        
+        let body = "{\"type\": \"market\", \"size\": \"\(size)\", \"side\": \"\(side)\", \"product_id\": \"\(productId)\", \"time_in_force\": \"FOK\"}"
+        
+        getApiResponse(
+            api: .createOrders,
+            authRequired: true,
+            requestPath: "/orders",
+            httpMethod: .POST,
+            body: body,
+            parameters: body
+        ) { (order: Order) in
+            print(order)
+            completion(order.id ?? "0")
+        }
+    }
+    
+    func getOneOrder(id: String, completion: @escaping (Order) -> Void) {
+        getApiResponse(api: .getOneOrder(id: id), authRequired: true, requestPath: "/orders/\(id)") { (order: Order) in
+            completion(order)
+        }
+    }
 }

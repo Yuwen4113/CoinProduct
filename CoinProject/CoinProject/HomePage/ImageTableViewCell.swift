@@ -44,11 +44,11 @@ class ImageTableViewCell: UITableViewCell {
     @IBAction func didEyeButtonTapped(_ sender: Any) {
         if eyeButton.isSelected {
             eyeButton.isSelected = false
-            PriceLabel.text = "NT$ ***** "
+            PriceLabel.text = "NT$\(price)"
             eyeButton.setImage(UIImage(named: "eye-close"), for: .normal)
         } else {
             eyeButton.isSelected = true
-            PriceLabel.text = "NT$\(price)"
+            PriceLabel.text = "NT$ ***** "
             eyeButton.setImage(UIImage(named: "eye-open"), for: .normal)
         }
     }
