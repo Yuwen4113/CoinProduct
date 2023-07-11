@@ -14,8 +14,16 @@ class CurrencySelectorViewController: UIViewController {
     var accountPairs: [Account] = []
     var allCurrencyAccount = Account(id: "", currency: "所有幣種", balance: "", hold: "", available: "", profileID: "", tradingEnabled: true)
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var titleView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+//        titleView.layer.cornerRadius = 10
+        let cornerRadius: CGFloat = 15.0
+        let maskedCorners: CACornerMask = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+
+        titleView.layer.cornerRadius = cornerRadius
+        titleView.layer.maskedCorners = maskedCorners
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -23,7 +31,6 @@ class CurrencySelectorViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getAccountsTotalBalance {
-            print(self.accountPairs.count)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }

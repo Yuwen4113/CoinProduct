@@ -29,7 +29,6 @@ class BuyViewController: UIViewController {
     @IBOutlet weak var buySellButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         exchangeTextField.isEnabled = false
         exchangeTextField.textColor = .gray
         twdTextField.isEnabled = true
@@ -40,6 +39,7 @@ class BuyViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
         if isSell == false {
             maxButton.isHidden = true
             noticeLabel.text = ""
@@ -49,15 +49,13 @@ class BuyViewController: UIViewController {
             buySellButton.setTitle("買入", for: .normal)
         } else {
             fetchAccounts { accounts in
-                //                print(self.accountBalances[0].balance)
                 for account in accounts {
                     if account.currency == self.currencyPair?.baseCurrency {
                         self.accountBalances.append(account)
                     }
                 }
                 DispatchQueue.main.async {
-                    //                    String(format: "%.8f",(Double(self.accountBalances[0].balance) ?? 0))
-                    self.noticeLabel.text = "可用餘額：" + String(format: "%.8f",(Double(self.accountBalances[0].balance) ?? 0))
+                    self.noticeLabel.text = "可用餘額：" + (Double(self.accountBalances[0].balance)?.formattedWithSeparator() ?? "0")
                     + " \(self.currencyPair!.baseCurrency)"
                 }
             }
@@ -104,9 +102,9 @@ class BuyViewController: UIViewController {
             
             DispatchQueue.main.async {
                 if self.isSell == false {
-                    self.exchangeLabel?.text = String(self.currencySellBid)
+                    self.exchangeLabel?.text = self.currencySellBid.formattedWith8Separator()
                 } else {
-                    self.exchangeLabel?.text = String(self.currencySellPrice)
+                    self.exchangeLabel?.text = self.currencySellPrice.formattedWith8Separator()
                 }
             }
         }
@@ -152,27 +150,33 @@ class BuyViewController: UIViewController {
         
     }
     
-    
-    
     @IBAction func didBuyButtonTapped(_ sender: Any) {
-        
+        LoadingUtils.shared.doStartLoading(view: self.view, text: "Loading")
         CoinbaseService.shared.createOrders(
             size: self.exchangeTextField.text ?? "0",
             side: (isSell! ? "sell" : "buy"),
             productId: "\(self.currencyPair?.baseCurrency ?? "")-USD") { orderId in
-                print(orderId)
-                DispatchQueue.main.async {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let nextViewController = storyboard.instantiateViewController(withIdentifier: "OrderDetailViewController") as! OrderDetailViewController
-                    nextViewController.currencyPair = self.currencyPair
-                    nextViewController.exchangeText = self.exchangeTextField.text ?? ""
-                    nextViewController.orderId = orderId
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        self.navigationController?.pushViewController(nextViewController, animated: true)
+                if orderId == "0" {
+                    DispatchQueue.main.async {
+                        LoadingUtils.shared.doStopLoading()
+                        let alertController = UIAlertController(title: "500 Internal server error", message: "系統維護中，請稍後再試", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let nextViewController = storyboard.instantiateViewController(withIdentifier: "OrderDetailViewController") as! OrderDetailViewController
+                        nextViewController.currencyPair = self.currencyPair
+                        nextViewController.exchangeText = self.exchangeTextField.text ?? ""
+                        nextViewController.orderId = orderId
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            LoadingUtils.shared.doStopLoading()
+                            self.navigationController?.pushViewController(nextViewController, animated: true)
+                        }
                     }
                 }
-            }
+            } errorHandle: { }
     }
     
     func fetchAccounts(completion: @escaping ([Account]) -> Void) {

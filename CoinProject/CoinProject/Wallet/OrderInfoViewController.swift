@@ -10,6 +10,7 @@ import UIKit
 class OrderInfoViewController: UIViewController {
     var data: Order?
 
+    @IBOutlet weak var buyButton: UIButton!
     @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var doneAtLabel: UILabel!
     @IBOutlet weak var updateTimeLabel: UILabel!
@@ -17,8 +18,7 @@ class OrderInfoViewController: UIViewController {
     @IBOutlet weak var costPriceLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+        buyButton.layer.cornerRadius = 5
         let orderTimeString = data?.createdAt
             let updateTimeString = data?.doneAt
             let dateFormatter = DateFormatter()
@@ -49,13 +49,19 @@ class OrderInfoViewController: UIViewController {
             } else {
                 print("日期解析失敗")
             }
-            
+        if data?.side == "buy" {
+            buyButton.setTitle("BUY", for: .normal)
+            buyButton.backgroundColor = .systemBrown
+        } else {
+            buyButton.setTitle("SELL", for: .normal)
+            buyButton.backgroundColor = .orange
+        }
             
         if let sizeString = data?.size, let executedValueString = data?.executedValue, let productID = data?.productID {
             if let size = Double(sizeString), let executedValue = Double(executedValueString) {
-                self.sizeLabel.text = String(format: "%.8f", size) + " \(productID)"
-                self.uniPriceLabel.text = "USD$ " + String(format: "%.8f", executedValue / size)
-                self.costPriceLabel.text = "USD$ " + String(format: "%.8f", executedValue)
+                self.sizeLabel.text =  size.formattedWith8Separator() + " \(productID)"
+                self.uniPriceLabel.text = "USD$ " + (executedValue / size).formattedWith8Separator()
+                self.costPriceLabel.text = "USD$ " + executedValue.formattedWith8Separator()
             } else {
                 self.sizeLabel.text = "Invalid size"
                 self.uniPriceLabel.text = "Invalid price"

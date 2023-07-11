@@ -13,13 +13,13 @@ class WalletsViewController: UIViewController {
     var accountTotalBalance: Double = 0
     var accountPairs: [Account] = []
     var fluctuateRateAvgPrice: [String: Double] = [:]
-    var totalBalance: Int = 0
+    var totalBalance: Double = 0
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var closeBalanceButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-    var price: Int = 0 {
+    var price: Double = 0 {
         didSet {
-            balanceLabel.text = "NT$ \(price)"
+            self.balanceLabel.text = "NT$ " + self.price.formattedWithSeparator()
         }
     }
     override func viewDidLoad() {
@@ -34,13 +34,22 @@ class WalletsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        self.totalBalance = 0
+        LoadingUtils.shared.doStartLoading(view: self.view, text: "Loading")
         self.getAccountsTotalBalance() {
             DispatchQueue.main.async {
-                self.totalBalance = 0
+                LoadingUtils.shared.doStopLoading()
                 self.tableView.reloadData()
-                DispatchQueue.main.async {
-                    self.price = self.totalBalance
+                
+                // 每一次畫面打開時，在進行餘額計算
+                self.accountPairs.forEach { accountPair in
+                    let coinRate = self.fluctuateRateAvgPrice[accountPair.currency]
+                    let coinNTBalance = (Double(accountPair.balance) ?? 0) * Double(coinRate ?? 0)
+                    
+                    self.totalBalance += coinNTBalance
                 }
+                
+                self.price = self.totalBalance
             }
         }
     }
@@ -52,9 +61,9 @@ class WalletsViewController: UIViewController {
     }
     
     @objc func headerRefresh() {
-            self.tableView!.reloadData()
-            self.tableView.mj_header?.endRefreshing()
-        }
+        self.tableView!.reloadData()
+        self.tableView.mj_header?.endRefreshing()
+    }
     
     func getAccountsTotalBalance(completion: @escaping () -> Void) {
         CoinbaseService.shared.fetchAccounts { [weak self] accounts in
@@ -117,12 +126,12 @@ class WalletsViewController: UIViewController {
     @IBAction func didEyeButtonTapped(_ sender: Any) {
         if closeBalanceButton.isSelected {
             closeBalanceButton.isSelected = false
-            balanceLabel.text = "NT$ \(price)"
-            closeBalanceButton.setImage(UIImage(named: "eye-close"), for: .normal)
+            balanceLabel.text = "NT$ " + price.formattedWithSeparator()
+            closeBalanceButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         } else {
             closeBalanceButton.isSelected = true
             balanceLabel.text = "NT$ ***** "
-            closeBalanceButton.setImage(UIImage(named: "eye-open"), for: .normal)
+            closeBalanceButton.setImage(UIImage(systemName: "eye"), for: .normal)
         }
         
     }
@@ -147,13 +156,13 @@ extension WalletsViewController: UITableViewDelegate, UITableViewDataSource {
         cell.coinNameLabel.text = accountPair.currency
         self.getIconUrl(imageView: cell.coinImage, for: accountPair.currency)
         
-        let coinNTBalance = Int((Double(accountPair.balance) ?? 0)  * Double(coinRate ?? 0))
-        cell.coinSizeLabel.text = String(format: "%.8f", Double(accountPair.balance) ?? 0)
-        cell.coinAmountLabel.text = "NT$ " + String(coinNTBalance)
+        let coinNTBalance = (Double(accountPair.balance) ?? 0) * Double(coinRate ?? 0)
+        cell.coinSizeLabel.text = Double(accountPair.balance)?.formattedWith8Separator()
+        cell.coinAmountLabel.text = "≈NT$ " + coinNTBalance.formattedWith8Separator()
         
-        self.totalBalance += coinNTBalance
-        print(accountPair.balance)
-        print(self.totalBalance)
+//        self.totalBalance += coinNTBalance
+//        print(self.totalBalance)
+        
         return cell
     }
     

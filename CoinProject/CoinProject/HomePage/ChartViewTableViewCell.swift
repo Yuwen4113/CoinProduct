@@ -57,9 +57,18 @@ class ImageMarkerView: MarkerView {
     }
 }
 
+enum SelectedType {
+    case day
+    case oneWeek
+    case oneMonth
+    case threeMonth
+    case oneYear
+    case all
+}
 
 
 class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
+    var selectedType: SelectedType = .oneMonth
     var data: LineChartData!
     var minXIndex: Double = 0
     var maxXIndex: Double = 0
@@ -76,6 +85,12 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     var threeMonthCandleTimeArray: [TimeInterval] = []
     var oneYearCandleTimeArray: [TimeInterval] = []
     var allCandleTimeArray: [TimeInterval] = []
+    var oneDayCandleLogCalcArray: [Double] = []
+    var oneWeekCandleLogCalcArray: [Double] = []
+    var oneMonthCandleLogCalcArray: [Double] = []
+    var threeMonthCandleLogCalcArray: [Double] = []
+    var oneYearCandleLogCalcArray: [Double] = []
+    var allCandleLogCalcArray: [Double] = []
     var dataEntries: [ChartDataEntry] = []
     @IBOutlet weak var historyAverageView: UIView!
     @IBOutlet weak var historyAverageLabel: UILabel!
@@ -98,31 +113,28 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         historyAverageView.isHidden = true
-        setButton(exceptButton: allButton, exceptView: allView)
+        setButton(exceptButton: monthButton, exceptView: monthView)
         lineChartView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 20)
     }
     
-    func changeChartViewData(dataArray: [Double], timeArray: [Double]) {
+     func changeChartViewData(dataArray: [Double], timeArray: [Double], logArray: [Double]) {
         lineChartView.data = nil
         lineChartView.xAxis.valueFormatter = nil
         lineChartView.marker = nil
         lineChartView.notifyDataSetChanged()
         if dataArray.isEmpty == false {
-            //打開 暫無資料View
             minXIndex = timeArray[dataArray.firstIndex(of: dataArray.min() ?? 0) ?? 0]
             maxXIndex = timeArray[dataArray.firstIndex(of: dataArray.max() ?? 0) ?? 0]
         }
 
         dataEntries = []
         dataSet = nil
-        for i in 0..<dataArray.count {
-            let formattedValue = String(format: "%.2f", dataArray[i])
+        for i in 0..<logArray.count {
+            let formattedValue = String(format: "%.2f", logArray[i])
             let dataEntry = ChartDataEntry(x: timeArray[i], y: Double(formattedValue) ?? 0)
             dataEntries.append(dataEntry)
         }
-        
-        //        lineChartView.xAxis.valueFormatter =
-        
+
         dataSet = LineChartDataSet(entries: dataEntries)
         dataSet.mode = .linear
         dataSet.drawCirclesEnabled = false
@@ -138,7 +150,6 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         data = LineChartData(dataSet: dataSet)
         lineChartView.data = data
         
-        
         if let data = lineChartView.data {
             if let lineDataSet = data.dataSets.first as? LineChartDataSet {
                 let startColor = UIColor.red
@@ -153,10 +164,10 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         }
         
         if let selectedEntry = dataEntries.first {
-            
+            let originalValue = logArray[dataEntries.firstIndex(of: selectedEntry) ?? 0]
             let coinImage = UIImage(named: "fulldown")
             let coinMarker = ImageMarkerView(color: .clear, font: .systemFont(ofSize: 10), textColor: .white, insets: .zero, image: coinImage)
-            coinMarker.refreshContent(entry: selectedEntry, highlight: Highlight(x: selectedEntry.x, y: selectedEntry.y, dataSetIndex: 0))
+            coinMarker.refreshContent(entry: selectedEntry, highlight: Highlight(x: selectedEntry.x, y: originalValue, dataSetIndex: 0))
             lineChartView.marker = coinMarker
         }
         
@@ -165,28 +176,34 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     
     @IBAction func didDayButtonTapped(_ sender: Any) {
         setButton(exceptButton: dayButton, exceptView: dayView)
-        changeChartViewData(dataArray: dayArray, timeArray: oneDayCandleTimeArray)
+        changeChartViewData(dataArray: dayArray, timeArray: oneDayCandleTimeArray, logArray: oneDayCandleLogCalcArray)
+        selectedType = .day
     }
     
     @IBAction func didWeekButtonTapped(_ sender: Any) {
         setButton(exceptButton: weekButton, exceptView: weekView)
-        changeChartViewData(dataArray: oneWeekArray, timeArray: oneWeekCandleTimeArray)
+        changeChartViewData(dataArray: oneWeekArray, timeArray: oneWeekCandleTimeArray, logArray: oneWeekCandleLogCalcArray)
+        selectedType = .oneWeek
     }
     @IBAction func didMonthButtonTapped(_ sender: Any) {
         setButton(exceptButton: monthButton, exceptView: monthView)
-        changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray)
+        changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray, logArray: oneMonthCandleLogCalcArray)
+        selectedType = .oneMonth
     }
     @IBAction func didThreeMonthButtonTapped(_ sender: Any) {
         setButton(exceptButton: threeMonthButton, exceptView: threeMonthView)
-        changeChartViewData(dataArray: threeMonthArray, timeArray: threeMonthCandleTimeArray)
+        changeChartViewData(dataArray: threeMonthArray, timeArray: threeMonthCandleTimeArray, logArray: threeMonthCandleLogCalcArray)
+        selectedType = .threeMonth
     }
     @IBAction func didYearButtonTapped(_ sender: Any) {
         setButton(exceptButton: yearButton, exceptView: yearView)
-        changeChartViewData(dataArray: oneYearArray, timeArray: oneYearCandleTimeArray)
+        changeChartViewData(dataArray: oneYearArray, timeArray: oneYearCandleTimeArray, logArray: oneYearCandleLogCalcArray)
+        selectedType = .oneYear
     }
     @IBAction func didAllButtonTapped(_ sender: Any) {
         setButton(exceptButton: allButton, exceptView: allView)
-        changeChartViewData(dataArray: allArray, timeArray: allCandleTimeArray)
+        changeChartViewData(dataArray: allArray, timeArray: allCandleTimeArray, logArray: allCandleLogCalcArray)
+        selectedType = .all
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -236,7 +253,7 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         //        lineChartView.xAxis.valueFormatter = XAxisValueFormatter(monthlyTotalAmounts: monthlyTotalAmounts)
         //
         
-        changeChartViewData(dataArray: allArray, timeArray: allCandleTimeArray)
+        changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray, logArray: oneMonthCandleLogCalcArray)
     }
     
     func chartViewDidEndPanning(_ chartView: ChartViewBase) {
@@ -255,16 +272,33 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         let timestamp: TimeInterval = entry.x
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 8 * 60 * 60) // 設定時區為 +8
-
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 8 * 60 * 60)
         let date = Date(timeIntervalSince1970: timestamp)
         let dateString = dateFormatter.string(from: date)
-        
-        historyAverageLabel.text = "\(entry.y)"
         historyTimeLabel.text = dateString
+        
+//        var index = Int(chartView.index(ofAccessibilityElement: entry.x))
+//        var originalValue = oneMonthArray[index2]
+//        historyAverageLabel.text = "\(originalValue)"
+        
+        let index = chartView.data?.dataSets[0].entryIndex(entry: entry) ?? 0
+        
+        switch selectedType{
+        case.day:
+            historyAverageLabel.text = dayArray[index].formattedWithSeparator()
+        case.oneWeek:
+            historyAverageLabel.text = oneWeekArray[index].formattedWithSeparator()
+        case.oneMonth:
+            historyAverageLabel.text = oneMonthArray[index].formattedWithSeparator()
+        case.threeMonth:
+            historyAverageLabel.text = threeMonthArray[index].formattedWithSeparator()
+        case.oneYear:
+            historyAverageLabel.text = oneYearArray[index].formattedWithSeparator()
+        case.all:
+            historyAverageLabel.text = allArray[index].formattedWithSeparator()
+        }
+        
         historyAverageView.isHidden = false
-        
-        
     }
 }
 
@@ -272,11 +306,25 @@ extension ChartViewTableViewCell: ValueFormatter {
     func stringForValue(_ value: Double, entry: Charts.ChartDataEntry, dataSetIndex: Int, viewPortHandler: Charts.ViewPortHandler?) -> String {
         if entry.x == minXIndex || entry.x == maxXIndex {
             entry.icon = UIImage(named: "down")
-            
-            return "\(value)"
+            let index = lineChartView.data?.dataSets[0].entryIndex(entry: entry) ?? 0
+            switch selectedType{
+            case.day:
+                return dayArray[index].formattedWithSeparator()
+            case.oneWeek:
+                return oneWeekArray[index].formattedWithSeparator()
+            case.oneMonth:
+                return oneMonthArray[index].formattedWithSeparator()
+            case.threeMonth:
+                return threeMonthArray[index].formattedWithSeparator()
+            case.oneYear:
+                return oneYearArray[index].formattedWithSeparator()
+            case.all:
+                return allArray[index].formattedWithSeparator()
+            }
         } else {
             return ""
         }
     }
     
 }
+

@@ -20,18 +20,27 @@ class OrderDetailViewController: UIViewController {
     @IBOutlet weak var amountsPayableLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        buyButton.layer.cornerRadius = 5
     }
        
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
         self.navigationController?.navigationBar.isHidden = true
-        
+        LoadingUtils.shared.doStartLoading(view: self.view, text: "Loading")
         DispatchQueue.main.async {
             CoinbaseService.shared.getOneOrder(id: self.orderId) { order in
+                
+                LoadingUtils.shared.doStopLoading()
                 self.order = order
                 DispatchQueue.main.async {
+                    if order.side == "buy" {
+                        self.buyButton.setTitle("BUY", for: .normal)
+                        self.buyButton.backgroundColor = .systemBrown
+                    } else {
+                        self.buyButton.setTitle("SELL", for: .normal)
+                        self.buyButton.backgroundColor = .orange
+                    }
                     let orderTimeString = self.order?.createdAt
                     let updateTimeString = self.order?.doneAt
                     let dateFormatter = DateFormatter()
@@ -67,9 +76,9 @@ class OrderDetailViewController: UIViewController {
                     var price = (executedValue ?? 0) / (size ?? 0)
                     var fillFees = Double(self.order?.fillFees ?? "0")
                     
-                    self.currencyCostLabel.text = "\(self.order?.size ?? "") \(self.currencyPair!.baseCurrency)"
-                    self.unitPriceLabel.text = "USD$ " + String((executedValue ?? 0) / (size ?? 0))
-                    self.amountsPayableLabel.text = "USD$ " + String(executedValue ?? 0)
+                    self.currencyCostLabel.text = (Double(self.order?.size ?? "0")?.formattedWith8Separator() ?? "0") + "\(self.currencyPair!.baseCurrency)"
+                    self.unitPriceLabel.text = "USD$ " + ((executedValue ?? 0) / (size ?? 0)).formattedWith8Separator()
+                    self.amountsPayableLabel.text = "USD$ " + (executedValue ?? 0).formattedWith8Separator()
                 }
             }
         }
