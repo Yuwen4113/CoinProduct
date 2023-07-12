@@ -25,7 +25,7 @@
 		879BF1212A4DC2D100F879CF /* ChartViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879BF1202A4DC2D100F879CF /* ChartViewTableViewCell.swift */; };
 		879BF1232A4DC2E500F879CF /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879BF1222A4DC2E500F879CF /* RecordTableViewCell.swift */; };
 		87D57A452A5D2C6D00C7BF5F /* NoDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D57A442A5D2C6D00C7BF5F /* NoDataTableViewCell.swift */; };
-		87D57A472A5D346900C7BF5F /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D57A462A5D346900C7BF5F /* File.swift */; };
+		87D57A472A5D346900C7BF5F /* LoadingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D57A462A5D346900C7BF5F /* LoadingUtils.swift */; };
 		87D57A4A2A5D38FD00C7BF5F /* charts.json in Resources */ = {isa = PBXBuildFile; fileRef = 87D57A492A5D38FD00C7BF5F /* charts.json */; };
 		87DB28982A504EB5000E17A4 /* ProductStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DB28902A504EB4000E17A4 /* ProductStats.swift */; };
 		87DB28992A504EB5000E17A4 /* CurrencyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DB28912A504EB4000E17A4 /* CurrencyInfo.swift */; };
@@ -70,7 +70,7 @@
 		879BF1202A4DC2D100F879CF /* ChartViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewTableViewCell.swift; sourceTree = "<group>"; };
 		879BF1222A4DC2E500F879CF /* RecordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
 		87D57A442A5D2C6D00C7BF5F /* NoDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataTableViewCell.swift; sourceTree = "<group>"; };
-		87D57A462A5D346900C7BF5F /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		87D57A462A5D346900C7BF5F /* LoadingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingUtils.swift; sourceTree = "<group>"; };
 		87D57A492A5D38FD00C7BF5F /* charts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = charts.json; sourceTree = "<group>"; };
 		87DB28902A504EB4000E17A4 /* ProductStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductStats.swift; sourceTree = "<group>"; };
 		87DB28912A504EB4000E17A4 /* CurrencyInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyInfo.swift; sourceTree = "<group>"; };
@@ -175,7 +175,7 @@
 				87DB28A12A504F0D000E17A4 /* Constants.swift */,
 				87DB28A42A504F0D000E17A4 /* WebsocketService.swift */,
 				879417C62A554BA900930F99 /* PostApi.swift */,
-				87D57A462A5D346900C7BF5F /* File.swift */,
+				87D57A462A5D346900C7BF5F /* LoadingUtils.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -386,7 +386,7 @@
 				879417CC2A56770C00930F99 /* OrderHistoryViewController.swift in Sources */,
 				87DB289B2A504EB5000E17A4 /* Orders.swift in Sources */,
 				87DB28A72A504F0D000E17A4 /* CoinbaseService+Helpers.swift in Sources */,
-				87D57A472A5D346900C7BF5F /* File.swift in Sources */,
+				87D57A472A5D346900C7BF5F /* LoadingUtils.swift in Sources */,
 				87DB28A82A504F0D000E17A4 /* WebsocketService.swift in Sources */,
 				879417C32A54406100930F99 /* BuyViewController.swift in Sources */,
 				879BF1232A4DC2E500F879CF /* RecordTableViewCell.swift in Sources */,

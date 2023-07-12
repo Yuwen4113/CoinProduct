@@ -127,11 +127,11 @@ class WalletsViewController: UIViewController {
         if closeBalanceButton.isSelected {
             closeBalanceButton.isSelected = false
             balanceLabel.text = "NT$ " + price.formattedWithSeparator()
-            closeBalanceButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
+            closeBalanceButton.setImage(UIImage(systemName: "eye"), for: .normal)
         } else {
             closeBalanceButton.isSelected = true
             balanceLabel.text = "NT$ ***** "
-            closeBalanceButton.setImage(UIImage(systemName: "eye"), for: .normal)
+            closeBalanceButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         }
         
     }

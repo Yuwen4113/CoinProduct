@@ -16,6 +16,7 @@ class LoadingUtils {
     func doStartLoading(view: UIView, text: String) {
         self.hud.textLabel.text = text
         self.hud.show(in: view)
+        self.hud.dismiss(afterDelay: 12)
     }
 
     func doStopLoading() {

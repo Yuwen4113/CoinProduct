@@ -80,6 +80,11 @@ class OrderDetailViewController: UIViewController {
                     self.unitPriceLabel.text = "USD$ " + ((executedValue ?? 0) / (size ?? 0)).formattedWith8Separator()
                     self.amountsPayableLabel.text = "USD$ " + (executedValue ?? 0).formattedWith8Separator()
                 }
+            } errorHandle: {
+                let alertController = UIAlertController(title: "500 Internal server error", message: "訂單加載中，請至確認資產頁面確認！", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+                
             }
         }
     }
@@ -94,9 +99,16 @@ class OrderDetailViewController: UIViewController {
     
     
     @IBAction func didCheckWalletButtonTapped(_ sender: Any) {
+
+//        let tabBar = self.navigationController?.presentingViewController as? UITabBarController
+//        tabBar?.selectedIndex = 1
+//
+//        self.navigationController?.dismiss(animated: false)
+        
         let tabBar = self.navigationController?.presentingViewController as? UITabBarController
-                self.navigationController?.dismiss(animated: false) {
-                    tabBar?.selectedIndex = 1
-        }
+
+                tabBar?.selectedIndex = 1
+                self.navigationController?.dismiss(animated: true)
+                (tabBar?.viewControllers![0] as? UINavigationController)!.popToRootViewController(animated: false)
     }
 }

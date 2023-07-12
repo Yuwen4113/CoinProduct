@@ -92,6 +92,9 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     var oneYearCandleLogCalcArray: [Double] = []
     var allCandleLogCalcArray: [Double] = []
     var dataEntries: [ChartDataEntry] = []
+    
+    let chartType = ["線性走勢圖", "對數走勢圖"]
+    var selectedChartType: String = "線性走勢圖"
     @IBOutlet weak var historyAverageView: UIView!
     @IBOutlet weak var historyAverageLabel: UILabel!
     @IBOutlet weak var lineChartView: LineChartView!
@@ -110,11 +113,18 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     @IBOutlet weak var realTimeByPriceLabel: UILabel!
     @IBOutlet weak var realTimeSellPriceLabel: UILabel!
     @IBOutlet weak var historyTimeLabel: UILabel!
+    @IBOutlet weak var pickChartTypeView: UIPickerView!
+    @IBOutlet weak var showPickViewButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         historyAverageView.isHidden = true
         setButton(exceptButton: monthButton, exceptView: monthView)
         lineChartView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 20)
+        pickChartTypeView.delegate = self
+        pickChartTypeView.dataSource = self
+        let defaultSelectedRow = 0
+        pickChartTypeView.selectRow(defaultSelectedRow, inComponent: 0, animated: false)
+        pickChartTypeView.isHidden = true
     }
     
      func changeChartViewData(dataArray: [Double], timeArray: [Double], logArray: [Double]) {
@@ -122,15 +132,21 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         lineChartView.xAxis.valueFormatter = nil
         lineChartView.marker = nil
         lineChartView.notifyDataSetChanged()
-        if dataArray.isEmpty == false {
-            minXIndex = timeArray[dataArray.firstIndex(of: dataArray.min() ?? 0) ?? 0]
-            maxXIndex = timeArray[dataArray.firstIndex(of: dataArray.max() ?? 0) ?? 0]
+        var selectedArray: [Double] = dataArray
+         if selectedChartType == "線性走勢圖" {
+             selectedArray = dataArray
+         } else {
+             selectedArray = logArray
+         }
+        if selectedArray.isEmpty == false {
+            minXIndex = timeArray[selectedArray.firstIndex(of: selectedArray.min() ?? 0) ?? 0]
+            maxXIndex = timeArray[selectedArray.firstIndex(of: selectedArray.max() ?? 0) ?? 0]
         }
 
         dataEntries = []
         dataSet = nil
-        for i in 0..<logArray.count {
-            let formattedValue = String(format: "%.2f", logArray[i])
+        for i in 0..<selectedArray.count {
+            let formattedValue = String(format: "%.2f", selectedArray[i])
             let dataEntry = ChartDataEntry(x: timeArray[i], y: Double(formattedValue) ?? 0)
             dataEntries.append(dataEntry)
         }
@@ -172,6 +188,16 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         }
         
         lineChartView.notifyDataSetChanged()
+    }
+    
+    @IBAction func didShowPickerViewTapped(_ sender: Any) {
+        if showPickViewButton.isSelected {
+            showPickViewButton.isSelected = false
+            pickChartTypeView.isHidden = true
+        } else {
+            showPickViewButton.isSelected = true
+            pickChartTypeView.isHidden = false
+        }
     }
     
     @IBAction func didDayButtonTapped(_ sender: Any) {
@@ -320,6 +346,7 @@ extension ChartViewTableViewCell: ValueFormatter {
                 return oneYearArray[index].formattedWithSeparator()
             case.all:
                 return allArray[index].formattedWithSeparator()
+            
             }
         } else {
             return ""
@@ -328,3 +355,38 @@ extension ChartViewTableViewCell: ValueFormatter {
     
 }
 
+extension ChartViewTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 1
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            return chartType.count
+        }
+
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            return chartType[row]
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            self.selectedChartType = chartType[row]
+            self.pickChartTypeView.isHidden = true
+            self.showPickViewButton.setTitle(chartType[row] + " ▼", for: .normal)
+            switch selectedType{
+            case.day:
+                changeChartViewData(dataArray: dayArray, timeArray: oneDayCandleTimeArray, logArray: oneDayCandleLogCalcArray)
+            case.oneWeek:
+                changeChartViewData(dataArray: oneWeekArray, timeArray: oneWeekCandleTimeArray, logArray: oneWeekCandleLogCalcArray)
+            case.oneMonth:
+                changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray, logArray: oneMonthCandleLogCalcArray)
+            case.threeMonth:
+                changeChartViewData(dataArray: threeMonthArray, timeArray: threeMonthCandleTimeArray, logArray: threeMonthCandleLogCalcArray)
+            case.oneYear:
+                changeChartViewData(dataArray: oneYearArray, timeArray: oneYearCandleTimeArray, logArray: oneYearCandleLogCalcArray)
+            case.all:
+                changeChartViewData(dataArray: allArray, timeArray: allCandleTimeArray, logArray: allCandleLogCalcArray)
+            
+            }
+            
+        }
+}

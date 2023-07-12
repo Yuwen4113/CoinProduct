@@ -64,7 +64,7 @@ class HomePageDetailViewController: UIViewController, UIViewControllerTransition
         }
         let header = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(headerRefresh))
         tableView.mj_header = header
-
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -112,80 +112,82 @@ class HomePageDetailViewController: UIViewController, UIViewControllerTransition
         }
         DispatchQueue.global().async { [self] in
             fetchData(self.currencyPair?.id ?? "", "3600", "\(Int(calendar.date(byAdding: .day, value: -1, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
-            self?.oneDayCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
-            self?.oneDayCandleTimeArray = candles.map { $0[0] }.reversed()
-            self?.oneDayCandleLogCalcArray = self?.oneDayCandleCalcArray.map { log2($0 + 2) } ?? []
-        }
-        
-            
-        fetchData(currencyPair?.id ?? "", "3600", "\(Int(calendar.date(byAdding: .day, value: -7, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
-            self?.oneWeekCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
-            self?.oneWeekCandleTimeArray = candles.map { $0[0] }.reversed()
-            self?.oneWeekCandleLogCalcArray = self?.oneWeekCandleCalcArray.map { log2($0 + 2) } ?? []
-            
-        }
-        
-        fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .month, value: -1, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
-            self?.oneMonthCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
-            self?.oneMonthCandleTimeArray = candles.map { $0[0] }.reversed()
-            self?.oneMonthCandleLogCalcArray = self?.oneMonthCandleCalcArray.map { log2($0 + 2) } ?? []
-        }
-        
-        fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .month, value: -3, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
-            self?.threeMonthCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
-            self?.threeMonthCandleTimeArray = candles.map { $0[0] }.reversed()
-            self?.threeMonthCandleLogCalcArray = self?.threeMonthCandleCalcArray.map { log2($0 + 2) } ?? []
-        }
-        
-        fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .day, value: -300, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
-            self?.oneYearCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }
-            self?.oneYearCandleTimeArray = candles.map { $0[0] }
-            
-            let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: Date())!
-            fetchData(self?.currencyPair?.id ?? "", "86400", "\(Int(oneYearAgo.timeIntervalSince1970))", "\(Int(calendar.date(byAdding: .day, value: -301, to: Date())!.timeIntervalSince1970))") { [weak self] candles in
-                self?.oneYearCandleCalcArray.append(contentsOf: candles.map { ($0[1] + $0[2]) / 2 })
-                self?.oneYearCandleTimeArray.append(contentsOf: candles.map { $0[0] })
-                
-                self?.oneYearCandleCalcArray.reverse()
-                self?.oneYearCandleTimeArray.reverse()
-                self?.oneYearCandleLogCalcArray = self?.oneYearCandleCalcArray.map { log2($0 + 2) } ?? []
+                self?.oneDayCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
+                self?.oneDayCandleTimeArray = candles.map { $0[0] }.reversed()
+                self?.oneDayCandleLogCalcArray = self?.oneDayCandleCalcArray.map { log2($0 + 2) } ?? []
             }
-        }
-        
-        let queue = DispatchQueue(label: "apiQueue", qos: .userInteractive, attributes: .concurrent)
-        let interval: TimeInterval = 0.05
             
-        group.enter()
-        var date = Date()
-        var array = [[Double]]()
-        var candlesTemp = [[Double]]()
-        var index: Int = 0
-        
-        let semaphore = DispatchSemaphore(value: 0)
-        repeat {
-            let threeHundredDaysAgo = calendar.date(byAdding: .day, value: -300, to: date)!
-            queue.asyncAfter(deadline: .now() + interval * Double(index)) {
-                fetchData(self.currencyPair?.id ?? "", "86400", "\(Int(threeHundredDaysAgo.timeIntervalSince1970))", "\(Int(date.timeIntervalSince1970))") { candles in
-                    candlesTemp = candles
-                    array += candlesTemp
-                    date = threeHundredDaysAgo
-                    index += 1
-                    semaphore.signal()
+            
+            fetchData(currencyPair?.id ?? "", "3600", "\(Int(calendar.date(byAdding: .day, value: -7, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
+                self?.oneWeekCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
+                self?.oneWeekCandleTimeArray = candles.map { $0[0] }.reversed()
+                self?.oneWeekCandleLogCalcArray = self?.oneWeekCandleCalcArray.map { log2($0 + 2) } ?? []
+                
+            }
+            
+            fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .month, value: -1, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
+                self?.oneMonthCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
+                self?.oneMonthCandleTimeArray = candles.map { $0[0] }.reversed()
+                self?.oneMonthCandleLogCalcArray = self?.oneMonthCandleCalcArray.map { log2($0 + 2) } ?? []
+            }
+            
+            fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .month, value: -3, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
+                self?.threeMonthCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }.reversed()
+                self?.threeMonthCandleTimeArray = candles.map { $0[0] }.reversed()
+                self?.threeMonthCandleLogCalcArray = self?.threeMonthCandleCalcArray.map { log2($0 + 2) } ?? []
+            }
+            
+            fetchData(currencyPair?.id ?? "", "86400", "\(Int(calendar.date(byAdding: .day, value: -300, to: Date())!.timeIntervalSince1970))", "\(Int(Date().timeIntervalSince1970))") { [weak self] candles in
+                self?.oneYearCandleCalcArray = candles.map { ($0[1] + $0[2]) / 2 }
+                self?.oneYearCandleTimeArray = candles.map { $0[0] }
+                
+                let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: Date())!
+                fetchData(self?.currencyPair?.id ?? "", "86400", "\(Int(oneYearAgo.timeIntervalSince1970))", "\(Int(calendar.date(byAdding: .day, value: -301, to: Date())!.timeIntervalSince1970))") { [weak self] candles in
+                    self?.oneYearCandleCalcArray.append(contentsOf: candles.map { ($0[1] + $0[2]) / 2 })
+                    self?.oneYearCandleTimeArray.append(contentsOf: candles.map { $0[0] })
+                    
+                    self?.oneYearCandleCalcArray.reverse()
+                    self?.oneYearCandleTimeArray.reverse()
+                    self?.oneYearCandleLogCalcArray = self?.oneYearCandleCalcArray.map { log2($0 + 2) } ?? []
                 }
             }
             
-            semaphore.wait()
+            let queue = DispatchQueue(label: "apiQueue", qos: .userInteractive, attributes: .concurrent)
+            let interval: TimeInterval = 0
             
-        } while(candlesTemp.count != 0)
-        
-        self.allCandleCalcArray = array.map { ($0[1] + $0[2]) / 2 }.reversed()
-        self.allCandleTimeArray = array.map { $0[0] }.reversed()
-        self.allCandleLogCalcArray = self.allCandleCalcArray.map { log2($0 + 2) } ?? []
-        group.leave()
-        
+            var date = Date()
+            var array = [[Double]]()
+            var candlesTemp = [[Double]]()
+            var index: Int = 0
+            
+            let semaphore = DispatchSemaphore(value: 0)
+            repeat {
+                let threeHundredDaysAgo = calendar.date(byAdding: .day, value: -300, to: date)!
+                queue.asyncAfter(deadline: .now() + interval * Double(index)) {
+//                    fetchData(self.currencyPair?.id ?? "", "86400", "\(Int(threeHundredDaysAgo.timeIntervalSince1970))", "\(Int(date.timeIntervalSince1970))") { candles in
+                    CoinbaseService.shared.fetchProductCandles(productID: self.currencyPair?.id ?? "", granularity: "86400", start: "\(Int(threeHundredDaysAgo.timeIntervalSince1970))", end: "\(Int(date.timeIntervalSince1970))") { candles in
+                        candlesTemp = candles
+                        array += candlesTemp
+                        date = threeHundredDaysAgo
+                        index += 1
+                        semaphore.signal()
+                    } errorHandle: {
+                        semaphore.signal()
+                    }
+                }
+                
+                semaphore.wait()
+                
+            } while(candlesTemp.count != 0)
+            
+            self.allCandleCalcArray = array.map { ($0[1] + $0[2]) / 2 }.reversed()
+            self.allCandleTimeArray = array.map { $0[0] }.reversed()
+            self.allCandleLogCalcArray = self.allCandleCalcArray.map { log2($0 + 2) } ?? []
+
+            
             group.notify(queue: DispatchQueue.main) {
                 DispatchQueue.main.async {
-                    print(allCandleCalcArray.count)
+//                    print(allCandleCalcArray.count)
                     self.tableView.dataSource = self
                     self.tableView.delegate = self
                     self.animationView.stop()
@@ -193,10 +195,10 @@ class HomePageDetailViewController: UIViewController, UIViewControllerTransition
                     self.tableView.reloadData()
                     buyButton.isHidden = false
                     sellButton.isHidden = false
-
+                    
                 }
             }
-    }
+        }
         
     }
     
@@ -242,7 +244,7 @@ class HomePageDetailViewController: UIViewController, UIViewControllerTransition
             
             present(nv, animated: true, completion: nil)
         }
-
+        
     }
     
     @IBAction func didBackButtonTapped(_ sender: Any) {
@@ -310,14 +312,14 @@ extension HomePageDetailViewController: UITableViewDelegate, UITableViewDataSour
             cell.allCandleLogCalcArray = allCandleLogCalcArray
             cell.setChartView(dataArray: oneMonthCandleCalcArray)
             return cell
-
+            
         default:
             if orders.count == 0 {
                 let emptyCell = tableView.dequeueReusableCell(withIdentifier: "NoDataTableViewCell", for: indexPath) as! NoDataTableViewCell
                 return emptyCell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RecordTableViewCell", for: indexPath) as! RecordTableViewCell
-        
+                
                 if orders[indexPath.row - 1].side == "buy" {
                     cell.buyCoinTypeLabel.text = "購入 \(currencyPair!.baseCurrency)"
                     cell.buyShowLabel.text = "BUY"
@@ -335,11 +337,11 @@ extension HomePageDetailViewController: UITableViewDelegate, UITableViewDataSour
                 }
                 cell.buyCoinPriceLabel.text = "USD$ " + (Double(orders[indexPath.row - 1].executedValue ?? "0")?.formattedWithSeparator() ?? "0")
                 let dateString = orders[indexPath.row - 1].doneAt!
-
+                
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
                 dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
-
+                
                 if let date = dateFormatter.date(from: dateString) {
                     let taiwanTimeZone = TimeZone(abbreviation: "GMT+8")
                     dateFormatter.timeZone = taiwanTimeZone
@@ -359,13 +361,13 @@ extension HomePageDetailViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func callAnimation(animationView: LottieAnimationView, fileName: String) {
-            if let animation = LottieAnimation.named(fileName) {
-                animationView.animation = animation
-            } else {
-                DotLottieFile.named(fileName) { [animationView] result in
-                    guard case Result.success(let lottie) = result else { return }
-                    animationView.loadAnimation(from: lottie)
-                }
+        if let animation = LottieAnimation.named(fileName) {
+            animationView.animation = animation
+        } else {
+            DotLottieFile.named(fileName) { [animationView] result in
+                guard case Result.success(let lottie) = result else { return }
+                animationView.loadAnimation(from: lottie)
             }
         }
+    }
 }

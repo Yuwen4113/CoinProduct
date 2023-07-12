@@ -24,23 +24,19 @@ class OrderHistoryViewController: UIViewController, UIViewControllerTransitionin
                 let filteredOrders = orders.compactMap { $0 }
                 self.allOrders = filteredOrders
                 DispatchQueue.main.sync {
-//                    if self.selectedCurrency != ""{
-//                        self.selectedButoon.setTitle("\(self.selectedCurrency) ▼", for: .normal)
-//                    } else {
-//                        self.selectedButoon.setTitle("全部幣種 ▼", for: .normal)
-//                    }
                     LoadingUtils.shared.doStopLoading()
                     self.tableView.reloadData()
                 }
             } errorHandle: {
                 self.allOrders = []
-                DispatchQueue.main.sync {
-                    let alertController = UIAlertController(title: "500 Internal server error", message: "系統維護中，請稍後再試", preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
-                    self.present(alertController, animated: true, completion: nil)
-//                    self.selectedButoon.setTitle("\(self.selectedCurrency) ▼", for: .normal)
-                    LoadingUtils.shared.doStopLoading()
-                    self.tableView.reloadData()
+                if self.selectedCurrency == "BTC-USD" || self.selectedCurrency == "" {
+                    DispatchQueue.main.sync {
+                        let alertController = UIAlertController(title: "500 Internal server error", message: "系統維護中，請稍後再試", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                        LoadingUtils.shared.doStopLoading()
+                        self.tableView.reloadData()
+                    }
                 }
             }
         }

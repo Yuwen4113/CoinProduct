@@ -15,11 +15,11 @@
             <objects>
                 <viewController storyboardIdentifier="OrderHistoryViewController" id="SBX-QG-BK7" customClass="OrderHistoryViewController" customModule="CoinProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x14-Nd-U1f">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Mx-GR-eSM">
-                                <rect key="frame" x="16" y="69" width="35" height="35"/>
+                                <rect key="frame" x="16" y="10" width="35" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="VsK-ih-4Eg"/>
                                     <constraint firstAttribute="width" secondItem="3Mx-GR-eSM" secondAttribute="height" id="nzz-Li-c1f"/>
@@ -32,13 +32,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="資產紀錄" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tbp-tq-4fs">
-                                <rect key="frame" x="157.66666666666666" y="75" width="78" height="23"/>
+                                <rect key="frame" x="157.66666666666666" y="16" width="78" height="23"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wG6-ZQ-hBE">
-                                <rect key="frame" x="96.666666666666686" y="130" width="200" height="30"/>
+                                <rect key="frame" x="96.666666666666686" y="71" width="200" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Vo1-DY-3Vu"/>
                                 </constraints>
@@ -51,14 +51,14 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mVw-H9-ORe">
-                                <rect key="frame" x="0.0" y="168" width="393" height="1"/>
+                                <rect key="frame" x="0.0" y="109" width="393" height="1"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="kuB-qx-Mwh"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="1EO-uc-OK6">
-                                <rect key="frame" x="0.0" y="168" width="393" height="684"/>
+                                <rect key="frame" x="0.0" y="109" width="393" height="733"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="OrderHistoryTableViewCell" rowHeight="99" id="i3C-hD-2VW" customClass="OrderHistoryTableViewCell" customModule="CoinProject" customModuleProvider="target">
@@ -527,14 +527,14 @@
                                         </constraints>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" image="eye.slash" catalog="system">
+                                        <state key="normal" image="eye" catalog="system">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="didEyeButtonTapped:" destination="4y1-Ah-fq9" eventType="touchUpInside" id="Gf5-51-RmV"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nwW-WE-s4a">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nwW-WE-s4a">
                                         <rect key="frame" x="283" y="67.666666666666671" width="94" height="35"/>
                                         <color key="tintColor" red="0.97240775820000003" green="0.96098619699999999" blue="0.94509571790000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <state key="normal" title="Button"/>
@@ -779,7 +779,7 @@
                                                             <rect key="frame" x="55" y="2.6666666666666572" width="28" height="28"/>
                                                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                            <state key="normal" image="eye-close"/>
+                                                            <state key="normal" image="eye-open"/>
                                                             <connections>
                                                                 <action selector="didEyeButtonTapped:" destination="wbF-x1-sDN" eventType="touchUpInside" id="F6F-3G-Z8z"/>
                                                             </connections>
@@ -1063,29 +1063,45 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="即時買價 USD$" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eWA-ou-snT">
-                                                    <rect key="frame" x="20" y="0.0" width="157.66666666666666" height="18"/>
+                                                    <rect key="frame" x="19.999999999999993" y="0.0" width="105.33333333333331" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30.708" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E5a-xF-PAq">
-                                                    <rect key="frame" x="54.333333333333336" y="25.999999999999996" width="89.333333333333314" height="33.666666666666657"/>
+                                                    <rect key="frame" x="27.999999999999993" y="25.999999999999996" width="89.333333333333314" height="33.666666666666657"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30.432" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WzI-T1-5WG">
-                                                    <rect key="frame" x="244.99999999999997" y="25.999999999999996" width="90.666666666666657" height="33.666666666666657"/>
+                                                    <rect key="frame" x="162.66666666666666" y="25.999999999999996" width="90.666666666666657" height="33.666666666666657"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="即時賣價 USD$" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y94-Pf-dpH">
-                                                    <rect key="frame" x="237.66666666666666" y="0.0" width="105.33333333333334" height="18"/>
+                                                    <rect key="frame" x="155.33333333333334" y="0.0" width="105.33333333333334" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eif-BP-3D0">
+                                                    <rect key="frame" x="272" y="15" width="117" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="GEo-MI-yX4"/>
+                                                        <constraint firstAttribute="width" constant="117" id="Mj3-fH-2cB"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="線性走勢圖 ▼">
+                                                        <color key="titleColor" red="0.8738135695" green="0.30436530709999998" blue="0.28820359709999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="didShowPickerViewTapped:" destination="1Xg-1n-Vrp" eventType="touchUpInside" id="GnL-3R-hsd"/>
+                                                    </connections>
+                                                </button>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="O9p-Ba-94N">
                                                     <rect key="frame" x="16" y="379.66666666666669" width="361" height="50"/>
                                                     <subviews>
@@ -1338,7 +1354,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="g1d-b9-4gX" firstAttribute="top" secondItem="dXZ-Aa-Yb9" secondAttribute="bottom" constant="8" id="5fO-b1-9mn"/>
                                                         <constraint firstItem="MpQ-Tq-oKa" firstAttribute="centerX" secondItem="axe-pR-753" secondAttribute="centerX" id="6SL-Ra-roj"/>
@@ -1348,6 +1364,13 @@
                                                         <constraint firstItem="g1d-b9-4gX" firstAttribute="centerX" secondItem="axe-pR-753" secondAttribute="centerX" id="fgX-56-PcD"/>
                                                     </constraints>
                                                 </view>
+                                                <pickerView tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CpD-r6-A7y">
+                                                    <rect key="frame" x="193" y="53" width="200" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="100" id="95j-2F-XbE"/>
+                                                        <constraint firstAttribute="width" constant="200" id="JU8-ul-q4A"/>
+                                                    </constraints>
+                                                </pickerView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="LLx-Gt-gOL" firstAttribute="leading" secondItem="5Y6-he-byn" secondAttribute="leading" id="0dO-dS-LBI"/>
@@ -1357,23 +1380,26 @@
                                                 <constraint firstItem="E5a-xF-PAq" firstAttribute="top" secondItem="eWA-ou-snT" secondAttribute="bottom" constant="8" id="8BB-Vg-WoV"/>
                                                 <constraint firstAttribute="trailing" secondItem="axe-pR-753" secondAttribute="trailing" id="8C6-RK-Dmf"/>
                                                 <constraint firstItem="Nyu-L4-bUc" firstAttribute="top" secondItem="O9p-Ba-94N" secondAttribute="bottom" id="8T5-yR-4gN"/>
+                                                <constraint firstAttribute="trailing" secondItem="CpD-r6-A7y" secondAttribute="trailing" id="8cg-oH-KrD"/>
                                                 <constraint firstItem="axe-pR-753" firstAttribute="leading" secondItem="5Y6-he-byn" secondAttribute="leading" id="Aqx-Kg-LH0"/>
+                                                <constraint firstItem="CpD-r6-A7y" firstAttribute="top" secondItem="eif-BP-3D0" secondAttribute="bottom" constant="8" id="DCU-7K-qpN"/>
                                                 <constraint firstItem="axe-pR-753" firstAttribute="top" secondItem="5Y6-he-byn" secondAttribute="top" id="Dnk-GQ-UeF"/>
                                                 <constraint firstItem="eWA-ou-snT" firstAttribute="top" secondItem="5Y6-he-byn" secondAttribute="top" id="Faw-5a-I7K"/>
                                                 <constraint firstItem="WzI-T1-5WG" firstAttribute="centerX" secondItem="y94-Pf-dpH" secondAttribute="centerX" id="Gcq-OZ-fH9"/>
-                                                <constraint firstItem="y94-Pf-dpH" firstAttribute="leading" secondItem="eWA-ou-snT" secondAttribute="trailing" constant="60" id="Ggv-oh-Hqn"/>
-                                                <constraint firstAttribute="trailing" secondItem="y94-Pf-dpH" secondAttribute="trailing" constant="50" id="Kn9-l6-1rn"/>
+                                                <constraint firstItem="y94-Pf-dpH" firstAttribute="leading" secondItem="eWA-ou-snT" secondAttribute="trailing" constant="30" id="Ggv-oh-Hqn"/>
                                                 <constraint firstItem="WzI-T1-5WG" firstAttribute="top" secondItem="y94-Pf-dpH" secondAttribute="bottom" constant="8" id="NTX-Tb-gk0"/>
                                                 <constraint firstAttribute="trailing" secondItem="Nyu-L4-bUc" secondAttribute="trailing" id="PYH-Eb-srK"/>
+                                                <constraint firstItem="eif-BP-3D0" firstAttribute="top" secondItem="5Y6-he-byn" secondAttribute="top" constant="15" id="Rnw-YY-nOD"/>
                                                 <constraint firstItem="O9p-Ba-94N" firstAttribute="leading" secondItem="5Y6-he-byn" secondAttribute="leading" constant="16" id="TDo-Rx-js7"/>
                                                 <constraint firstItem="y94-Pf-dpH" firstAttribute="top" secondItem="5Y6-he-byn" secondAttribute="top" id="YQ1-YS-uYH"/>
                                                 <constraint firstItem="LLx-Gt-gOL" firstAttribute="top" secondItem="E5a-xF-PAq" secondAttribute="bottom" constant="32" id="aMi-oO-Vz7"/>
                                                 <constraint firstItem="O9p-Ba-94N" firstAttribute="top" secondItem="LLx-Gt-gOL" secondAttribute="bottom" constant="8" id="cT6-3Q-5Tv"/>
                                                 <constraint firstItem="LLx-Gt-gOL" firstAttribute="top" secondItem="E5a-xF-PAq" secondAttribute="bottom" constant="32" id="cn3-ID-kSx"/>
                                                 <constraint firstItem="LLx-Gt-gOL" firstAttribute="top" secondItem="WzI-T1-5WG" secondAttribute="bottom" constant="32" id="mTU-Gb-2xC"/>
+                                                <constraint firstAttribute="trailing" secondItem="eif-BP-3D0" secondAttribute="trailing" constant="4" id="oKM-ZY-RbV"/>
                                                 <constraint firstItem="eWA-ou-snT" firstAttribute="leading" secondItem="5Y6-he-byn" secondAttribute="leading" constant="20" id="ocI-eV-oBx"/>
                                                 <constraint firstItem="LLx-Gt-gOL" firstAttribute="top" secondItem="axe-pR-753" secondAttribute="bottom" id="p9T-ne-KtO"/>
-                                                <constraint firstItem="y94-Pf-dpH" firstAttribute="leading" secondItem="eWA-ou-snT" secondAttribute="trailing" constant="60" id="s8L-lc-cZT"/>
+                                                <constraint firstItem="y94-Pf-dpH" firstAttribute="leading" secondItem="eWA-ou-snT" secondAttribute="trailing" constant="30" id="s8L-lc-cZT"/>
                                                 <constraint firstAttribute="trailing" secondItem="O9p-Ba-94N" secondAttribute="trailing" constant="16" id="tSW-po-j6p"/>
                                                 <constraint firstItem="E5a-xF-PAq" firstAttribute="centerX" secondItem="eWA-ou-snT" secondAttribute="centerX" id="wWf-Wc-grP"/>
                                             </constraints>
@@ -1389,8 +1415,10 @@
                                             <outlet property="lineChartView" destination="LLx-Gt-gOL" id="oOh-Rf-u65"/>
                                             <outlet property="monthButton" destination="ddr-Yc-yiI" id="S78-y9-hGI"/>
                                             <outlet property="monthView" destination="9sn-TP-V2U" id="Kv2-qG-64O"/>
+                                            <outlet property="pickChartTypeView" destination="CpD-r6-A7y" id="prP-bE-uRN"/>
                                             <outlet property="realTimeByPriceLabel" destination="E5a-xF-PAq" id="xff-fT-RnP"/>
                                             <outlet property="realTimeSellPriceLabel" destination="WzI-T1-5WG" id="Y3I-rS-JLY"/>
+                                            <outlet property="showPickViewButton" destination="eif-BP-3D0" id="Ipz-iX-klq"/>
                                             <outlet property="threeMonthButton" destination="wpZ-B9-oQf" id="SM5-lV-DOO"/>
                                             <outlet property="threeMonthView" destination="90U-cD-iRo" id="1GW-a4-9hs"/>
                                             <outlet property="weekButton" destination="Ac9-HE-Dor" id="Vf5-BH-HOr"/>
@@ -2233,11 +2261,8 @@
             <point key="canvasLocation" x="2755" y="699"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="XDF-Ym-Wm7"/>
-    </designables>
     <inferredMetricsTieBreakers>
-        <segue reference="I9P-wz-bRS"/>
+        <segue reference="0my-bt-NCf"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Sucess" width="155" height="143"/>
@@ -2251,8 +2276,8 @@
         <image name="chevron.backward" catalog="system" width="97" height="128"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="circle.fill" catalog="system" width="128" height="123"/>
-        <image name="eye-close" width="28" height="28"/>
-        <image name="eye.slash" catalog="system" width="128" height="84"/>
+        <image name="eye" catalog="system" width="128" height="79"/>
+        <image name="eye-open" width="28" height="28"/>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>
         <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
         <image name="person.text.rectangle" catalog="system" width="128" height="93"/>
