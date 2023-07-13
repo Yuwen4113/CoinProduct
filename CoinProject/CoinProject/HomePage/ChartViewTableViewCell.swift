@@ -8,6 +8,30 @@
 import UIKit
 import Charts
 
+extension UIColor {
+    convenience init(hexString: String, alpha: CGFloat = 1.0) {
+        var formattedString = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        
+        if formattedString.hasPrefix("#") {
+            formattedString.remove(at: formattedString.startIndex)
+        }
+        
+        if formattedString.count == 6 {
+            var rgbValue: UInt64 = 0
+            Scanner(string: formattedString).scanHexInt64(&rgbValue)
+            
+            let red = CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0
+            let green = CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0
+            let blue = CGFloat(rgbValue & 0x0000FF) / 255.0
+            
+            self.init(red: red, green: green, blue: blue, alpha: alpha)
+        } else {
+            self.init(red: 0, green: 0, blue: 0, alpha: alpha)
+        }
+    }
+}
+
+
 class XAxisValueFormatter: IndexAxisValueFormatter {
     var labels: [String] = []
     init(monthlyTotalAmounts: [String: Int]) {
@@ -92,6 +116,8 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
     var oneYearCandleLogCalcArray: [Double] = []
     var allCandleLogCalcArray: [Double] = []
     var dataEntries: [ChartDataEntry] = []
+    var isUpRate: Bool = true
+    let greenColor = UIColor(hexString: AppColor.green.rawValue)
     
     let chartType = ["線性走勢圖", "對數走勢圖"]
     var selectedChartType: String = "線性走勢圖"
@@ -127,22 +153,22 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         pickChartTypeView.isHidden = true
     }
     
-     func changeChartViewData(dataArray: [Double], timeArray: [Double], logArray: [Double]) {
+    func changeChartViewData(dataArray: [Double], timeArray: [Double], logArray: [Double]) {
         lineChartView.data = nil
         lineChartView.xAxis.valueFormatter = nil
         lineChartView.marker = nil
         lineChartView.notifyDataSetChanged()
         var selectedArray: [Double] = dataArray
-         if selectedChartType == "線性走勢圖" {
-             selectedArray = dataArray
-         } else {
-             selectedArray = logArray
-         }
+        if selectedChartType == "線性走勢圖" {
+            selectedArray = dataArray
+        } else {
+            selectedArray = logArray
+        }
         if selectedArray.isEmpty == false {
             minXIndex = timeArray[selectedArray.firstIndex(of: selectedArray.min() ?? 0) ?? 0]
             maxXIndex = timeArray[selectedArray.firstIndex(of: selectedArray.max() ?? 0) ?? 0]
         }
-
+        
         dataEntries = []
         dataSet = nil
         for i in 0..<selectedArray.count {
@@ -150,38 +176,52 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
             let dataEntry = ChartDataEntry(x: timeArray[i], y: Double(formattedValue) ?? 0)
             dataEntries.append(dataEntry)
         }
-
+        
         dataSet = LineChartDataSet(entries: dataEntries)
         dataSet.mode = .linear
         dataSet.drawCirclesEnabled = false
         dataSet.valueFormatter = self
         dataSet.highlightLineWidth = 1.5
-        dataSet.highlightColor = .red
+        if (selectedArray.first ?? 0) > (selectedArray.last ?? 0) {
+            isUpRate = false
+            dataSet.colors = [UIColor.red]
+//            dataSet.valueColors = [UIColor.red]
+            dataSet.highlightColor = .red
+        } else {
+            isUpRate = true
+            dataSet.highlightColor = greenColor
+            dataSet.colors = [greenColor]
+//            dataSet.valueColors = [greenColor]
+        }
+        dataSet.valueColors = [UIColor.black]
         dataSet.highlightEnabled = true
         dataSet.drawHorizontalHighlightIndicatorEnabled = false
         dataSet.lineWidth = 1.5
-        dataSet.colors = [UIColor.red]
-        dataSet.valueColors = [UIColor.red]
         dataSet.valueFont = .systemFont(ofSize: 12)
         data = LineChartData(dataSet: dataSet)
         lineChartView.data = data
         
         if let data = lineChartView.data {
             if let lineDataSet = data.dataSets.first as? LineChartDataSet {
-                let startColor = UIColor.red
                 let endColor = UIColor.white
-                let gradientColors = [startColor.cgColor, endColor.cgColor] as CFArray
                 let colorLocations: [CGFloat] = [0.0, 1.0]
-                if let gradient = CGGradient(colorsSpace: nil, colors: gradientColors, locations: colorLocations) {
-                    lineDataSet.fill = LinearGradientFill(gradient: gradient, angle: 270)
-                    lineDataSet.drawFilledEnabled = true
+                if (selectedArray.first ?? 0) > (selectedArray.last ?? 0) {
+                    if let gradient = CGGradient(colorsSpace: nil, colors: [UIColor.red.cgColor, endColor.cgColor] as CFArray, locations: colorLocations) {
+                        lineDataSet.fill = LinearGradientFill(gradient: gradient, angle: 270)
+                        lineDataSet.drawFilledEnabled = true
+                    }
+                } else {
+                    if let gradient = CGGradient(colorsSpace: nil, colors: [greenColor.cgColor, endColor.cgColor] as CFArray, locations: colorLocations) {
+                        lineDataSet.fill = LinearGradientFill(gradient: gradient, angle: 270)
+                        lineDataSet.drawFilledEnabled = true
+                    }
                 }
             }
         }
         
         if let selectedEntry = dataEntries.first {
-            let originalValue = logArray[dataEntries.firstIndex(of: selectedEntry) ?? 0]
-            let coinImage = UIImage(named: "fulldown")
+            let originalValue = selectedArray[dataEntries.firstIndex(of: selectedEntry) ?? 0]
+            let coinImage = UIImage(named: "black")
             let coinMarker = ImageMarkerView(color: .clear, font: .systemFont(ofSize: 10), textColor: .white, insets: .zero, image: coinImage)
             coinMarker.refreshContent(entry: selectedEntry, highlight: Highlight(x: selectedEntry.x, y: originalValue, dataSetIndex: 0))
             lineChartView.marker = coinMarker
@@ -276,8 +316,6 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         lineChartView.scaleXEnabled = false
         lineChartView.scaleYEnabled = false
         lineChartView.doubleTapToZoomEnabled = false
-        //        lineChartView.xAxis.valueFormatter = XAxisValueFormatter(monthlyTotalAmounts: monthlyTotalAmounts)
-        //
         
         changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray, logArray: oneMonthCandleLogCalcArray)
     }
@@ -303,10 +341,6 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
         let dateString = dateFormatter.string(from: date)
         historyTimeLabel.text = dateString
         
-//        var index = Int(chartView.index(ofAccessibilityElement: entry.x))
-//        var originalValue = oneMonthArray[index2]
-//        historyAverageLabel.text = "\(originalValue)"
-        
         let index = chartView.data?.dataSets[0].entryIndex(entry: entry) ?? 0
         
         switch selectedType{
@@ -331,7 +365,7 @@ class ChartViewTableViewCell: UITableViewCell, ChartViewDelegate {
 extension ChartViewTableViewCell: ValueFormatter {
     func stringForValue(_ value: Double, entry: Charts.ChartDataEntry, dataSetIndex: Int, viewPortHandler: Charts.ViewPortHandler?) -> String {
         if entry.x == minXIndex || entry.x == maxXIndex {
-            entry.icon = UIImage(named: "down")
+            entry.icon = UIImage(named: "fullBlack")
             let index = lineChartView.data?.dataSets[0].entryIndex(entry: entry) ?? 0
             switch selectedType{
             case.day:
@@ -346,7 +380,7 @@ extension ChartViewTableViewCell: ValueFormatter {
                 return oneYearArray[index].formattedWithSeparator()
             case.all:
                 return allArray[index].formattedWithSeparator()
-            
+                
             }
         } else {
             return ""
@@ -357,36 +391,34 @@ extension ChartViewTableViewCell: ValueFormatter {
 
 extension ChartViewTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-            return 1
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return chartType.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return chartType[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        self.selectedChartType = chartType[row]
+        self.pickChartTypeView.isHidden = true
+        self.showPickViewButton.setTitle(chartType[row] + " ▼", for: .normal)
+        switch selectedType{
+        case.day:
+            changeChartViewData(dataArray: dayArray, timeArray: oneDayCandleTimeArray, logArray: oneDayCandleLogCalcArray)
+        case.oneWeek:
+            changeChartViewData(dataArray: oneWeekArray, timeArray: oneWeekCandleTimeArray, logArray: oneWeekCandleLogCalcArray)
+        case.oneMonth:
+            changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray, logArray: oneMonthCandleLogCalcArray)
+        case.threeMonth:
+            changeChartViewData(dataArray: threeMonthArray, timeArray: threeMonthCandleTimeArray, logArray: threeMonthCandleLogCalcArray)
+        case.oneYear:
+            changeChartViewData(dataArray: oneYearArray, timeArray: oneYearCandleTimeArray, logArray: oneYearCandleLogCalcArray)
+        case.all:
+            changeChartViewData(dataArray: allArray, timeArray: allCandleTimeArray, logArray: allCandleLogCalcArray)
         }
-        
-        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return chartType.count
-        }
-
-        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-            return chartType[row]
-        }
-        
-        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            self.selectedChartType = chartType[row]
-            self.pickChartTypeView.isHidden = true
-            self.showPickViewButton.setTitle(chartType[row] + " ▼", for: .normal)
-            switch selectedType{
-            case.day:
-                changeChartViewData(dataArray: dayArray, timeArray: oneDayCandleTimeArray, logArray: oneDayCandleLogCalcArray)
-            case.oneWeek:
-                changeChartViewData(dataArray: oneWeekArray, timeArray: oneWeekCandleTimeArray, logArray: oneWeekCandleLogCalcArray)
-            case.oneMonth:
-                changeChartViewData(dataArray: oneMonthArray, timeArray: oneMonthCandleTimeArray, logArray: oneMonthCandleLogCalcArray)
-            case.threeMonth:
-                changeChartViewData(dataArray: threeMonthArray, timeArray: threeMonthCandleTimeArray, logArray: threeMonthCandleLogCalcArray)
-            case.oneYear:
-                changeChartViewData(dataArray: oneYearArray, timeArray: oneYearCandleTimeArray, logArray: oneYearCandleLogCalcArray)
-            case.all:
-                changeChartViewData(dataArray: allArray, timeArray: allCandleTimeArray, logArray: allCandleLogCalcArray)
-            
-            }
-            
-        }
+    }
 }

@@ -38,6 +38,9 @@ class OrderHistoryViewController: UIViewController, UIViewControllerTransitionin
                         self.tableView.reloadData()
                     }
                 }
+                DispatchQueue.main.sync {
+                    self.tableView.reloadData()
+                }
             }
         }
     }

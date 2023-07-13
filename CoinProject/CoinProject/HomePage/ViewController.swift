@@ -50,7 +50,6 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @objc func headerRefresh() {
             self.tableView.reloadData()
             self.tableView.mj_header?.endRefreshing()
@@ -61,7 +60,9 @@ class ViewController: UIViewController {
                                               authRequired: false) { [weak self] (products: [TradingPair]) in
             self?.USDPairs = products.filter { currencyPair in
                 return String(currencyPair.id.suffix(3)) == "USD" && currencyPair.auctionMode  == false && currencyPair.status == "online"
-            }
+            }.sorted(by: { prev, next in
+                return prev.id < next.id
+            })
             completion?()
         }
     }

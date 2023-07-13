@@ -1092,7 +1092,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="GEo-MI-yX4"/>
                                                         <constraint firstAttribute="width" constant="117" id="Mj3-fH-2cB"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" title="線性走勢圖 ▼">
