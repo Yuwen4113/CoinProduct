@@ -10,21 +10,35 @@ import UIKit
 class OrderHistoryViewController: UIViewController, UIViewControllerTransitioningDelegate {
     var selectedCurrency: String = "" {
         didSet{
+            LoadingUtils.shared.doStartLoading(view: self.view, text: "Loading")
+            DispatchQueue.main.async {
+                if self.selectedCurrency != ""{
+                    self.selectedButoon.setTitle("\(self.selectedCurrency) ▼", for: .normal)
+                } else {
+                    self.selectedButoon.setTitle("全部幣種 ▼", for: .normal)
+                }
+                self.allOrders = []
+                self.tableView.reloadData()
+            }
             CoinbaseService.shared.fetchAllOrders(productID: selectedCurrency) { orders in
                 let filteredOrders = orders.compactMap { $0 }
                 self.allOrders = filteredOrders
                 DispatchQueue.main.sync {
-                    if self.selectedCurrency != ""{
-                        self.selectedButoon.setTitle("\(self.selectedCurrency) ▼", for: .normal)
-                    } else {
-                        self.selectedButoon.setTitle("全部幣種 ▼", for: .normal)
-                    }
+                    LoadingUtils.shared.doStopLoading()
                     self.tableView.reloadData()
                 }
             } errorHandle: {
                 self.allOrders = []
+                if self.selectedCurrency == "BTC-USD" || self.selectedCurrency == "" {
+                    DispatchQueue.main.sync {
+                        let alertController = UIAlertController(title: "500 Internal server error", message: "系統維護中，請稍後再試", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                        LoadingUtils.shared.doStopLoading()
+                        self.tableView.reloadData()
+                    }
+                }
                 DispatchQueue.main.sync {
-                    self.selectedButoon.setTitle("\(self.selectedCurrency) ▼", for: .normal)
                     self.tableView.reloadData()
                 }
             }
@@ -48,10 +62,12 @@ class OrderHistoryViewController: UIViewController, UIViewControllerTransitionin
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.isHidden = true
+        LoadingUtils.shared.doStartLoading(view: self.view, text: "Loading")
         CoinbaseService.shared.fetchAllOrders(productID: selectedCurrency) { orders in
             let filteredOrders = orders.compactMap { $0 }
             self.allOrders = filteredOrders
             DispatchQueue.main.sync {
+                LoadingUtils.shared.doStopLoading()
                 self.tableView.reloadData()
             }
         }
@@ -101,7 +117,7 @@ extension OrderHistoryViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if  allOrders.isEmpty {
+        if allOrders.isEmpty {
                let cell = tableView.dequeueReusableCell(withIdentifier: "NoDataCell", for: indexPath)
                return cell
            } else {
@@ -109,7 +125,7 @@ extension OrderHistoryViewController: UITableViewDelegate, UITableViewDataSource
             let order = allOrders[indexPath.row]
             if order.side == "buy" {
                 cell.buyButton.setTitle("BUY", for: .normal)
-                cell.buyButton.backgroundColor = cell.statusView.backgroundColor
+                cell.buyButton.backgroundColor = .systemBrown
                 cell.currencyNameLabel.text = "購入 \(order.productID?.dropLast(4) ?? "")"
             } else {
                 cell.buyButton.setTitle("SELL", for: .normal)
@@ -123,7 +139,7 @@ extension OrderHistoryViewController: UITableViewDelegate, UITableViewDataSource
                 cell.statusLabel.text = "失敗"
             }
             
-            cell.orderAmountLabel.text = "USD$ " + String(format: "%.2f", Double(order.executedValue ?? "0") ?? 0)
+            cell.orderAmountLabel.text = "USD$ " + (Double(order.executedValue ?? "0")?.formattedWithSeparator() ?? "0")
             
             let dateString = order.doneAt!
             let dateFormatter = DateFormatter()

@@ -20,18 +20,27 @@ class OrderDetailViewController: UIViewController {
     @IBOutlet weak var amountsPayableLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        buyButton.layer.cornerRadius = 5
     }
        
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
         self.navigationController?.navigationBar.isHidden = true
-        
+        LoadingUtils.shared.doStartLoading(view: self.view, text: "Loading")
         DispatchQueue.main.async {
             CoinbaseService.shared.getOneOrder(id: self.orderId) { order in
+                
+                LoadingUtils.shared.doStopLoading()
                 self.order = order
                 DispatchQueue.main.async {
+                    if order.side == "buy" {
+                        self.buyButton.setTitle("BUY", for: .normal)
+                        self.buyButton.backgroundColor = .systemBrown
+                    } else {
+                        self.buyButton.setTitle("SELL", for: .normal)
+                        self.buyButton.backgroundColor = .orange
+                    }
                     let orderTimeString = self.order?.createdAt
                     let updateTimeString = self.order?.doneAt
                     let dateFormatter = DateFormatter()
@@ -67,10 +76,15 @@ class OrderDetailViewController: UIViewController {
                     var price = (executedValue ?? 0) / (size ?? 0)
                     var fillFees = Double(self.order?.fillFees ?? "0")
                     
-                    self.currencyCostLabel.text = "\(self.order?.size ?? "") \(self.currencyPair!.baseCurrency)"
-                    self.unitPriceLabel.text = "USD$ " + String((executedValue ?? 0) / (size ?? 0))
-                    self.amountsPayableLabel.text = "USD$ " + String(executedValue ?? 0)
+                    self.currencyCostLabel.text = (Double(self.order?.size ?? "0")?.formattedWith8Separator() ?? "0") + "\(self.currencyPair!.baseCurrency)"
+                    self.unitPriceLabel.text = "USD$ " + ((executedValue ?? 0) / (size ?? 0)).formattedWith8Separator()
+                    self.amountsPayableLabel.text = "USD$ " + (executedValue ?? 0).formattedWith8Separator()
                 }
+            } errorHandle: {
+                let alertController = UIAlertController(title: "500 Internal server error", message: "訂單加載中，請至確認資產頁面確認！", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+                
             }
         }
     }
@@ -85,9 +99,16 @@ class OrderDetailViewController: UIViewController {
     
     
     @IBAction func didCheckWalletButtonTapped(_ sender: Any) {
+
+//        let tabBar = self.navigationController?.presentingViewController as? UITabBarController
+//        tabBar?.selectedIndex = 1
+//
+//        self.navigationController?.dismiss(animated: false)
+        
         let tabBar = self.navigationController?.presentingViewController as? UITabBarController
-                self.navigationController?.dismiss(animated: false) {
-                    tabBar?.selectedIndex = 1
-        }
+
+                tabBar?.selectedIndex = 1
+                self.navigationController?.dismiss(animated: true)
+                (tabBar?.viewControllers![0] as? UINavigationController)!.popToRootViewController(animated: false)
     }
 }

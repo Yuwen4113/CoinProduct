@@ -83,7 +83,7 @@ extension CoinbaseService {
             } catch {
                 print("-------------")
                 print(String(data: data, encoding: String.Encoding.utf8))
-                print("Error decoding data: \(error)")
+                print("💌💌💌💌💌💌💌💌💌Error decoding data: \(error)")
                 print("-------------")
                 errorHandle()
             }
